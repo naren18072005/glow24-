@@ -9,7 +9,7 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
       name: "Hair Oil",
       description: "Nourishing hair oil that strengthens hair follicles and promotes healthy growth.",
       price: 199,
-      image: "https://images.unsplash.com/photo-1610705267928-1b9f2fa7f1c5?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.0.3"
+      image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png"
     },
     {
       id: 2,
