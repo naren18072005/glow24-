@@ -41,7 +41,7 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
         </p>
         
         <div className="pt-2 flex justify-between items-center">
-          <span className="text-lg font-bold text-white">${product.price.toFixed(2)}</span>
+          <span className="text-lg font-bold text-white">₹{product.price.toFixed(2)}</span>
           
           <button className="button-success flex items-center gap-1 py-2 px-4 rounded-md">
             <ShoppingCart size={16} />
