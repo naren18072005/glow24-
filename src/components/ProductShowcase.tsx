@@ -16,7 +16,7 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
       name: "Rosemary Spray",
       description: "Refreshing rosemary spray that stimulates the scalp and adds shine to hair.",
       price: 150,
-      image: "https://images.unsplash.com/photo-1637319460943-10da953a3ad8?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3"
+      image: "/lovable-uploads/8b6970d3-aa7a-4b17-b67b-3b06dd0b3383.png"
     },
     {
       id: 3,
