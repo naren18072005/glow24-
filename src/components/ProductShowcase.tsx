@@ -6,30 +6,30 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
   hairCare: [
     {
       id: 1,
-      name: "Revitalizing Shampoo",
-      description: "A nourishing shampoo that revitalizes dry, damaged hair with natural oils and essential nutrients.",
-      price: 22.99,
+      name: "Hair Oil",
+      description: "Nourishing hair oil that strengthens hair follicles and promotes healthy growth.",
+      price: 199,
       image: "https://images.unsplash.com/photo-1610705267928-1b9f2fa7f1c5?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.0.3"
     },
     {
       id: 2,
-      name: "Moisturizing Conditioner",
-      description: "Deep conditioning treatment that smooths frizz and restores moisture balance.",
-      price: 24.99,
+      name: "Rosemary Spray",
+      description: "Refreshing rosemary spray that stimulates the scalp and adds shine to hair.",
+      price: 150,
       image: "https://images.unsplash.com/photo-1637319460943-10da953a3ad8?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3"
     },
     {
       id: 3,
-      name: "Hair Growth Serum",
-      description: "Advanced formula to stimulate hair follicles and promote thicker, stronger hair growth.",
-      price: 39.99,
+      name: "Hair Serum 15ml",
+      description: "Advanced formula that repairs damaged hair and reduces frizz. Travel size.",
+      price: 250,
       image: "https://images.unsplash.com/photo-1624972985097-d0a7a288a222?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3"
     },
     {
       id: 4,
-      name: "Scalp Treatment Oil",
-      description: "Therapeutic oil blend that soothes irritated scalp and nourishes hair from the roots.",
-      price: 32.99,
+      name: "Hair Serum 30ml",
+      description: "Advanced formula that repairs damaged hair and reduces frizz. Standard size.",
+      price: 350,
       image: "https://images.unsplash.com/photo-1630082900894-edbd503588f7?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3"
     }
   ],
