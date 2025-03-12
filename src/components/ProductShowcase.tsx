@@ -26,14 +26,14 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
       name: "Golden Serum (15ml)",
       description: "Luxurious golden serum that brightens and evens skin tone, enhancing your natural glow.",
       price: 250,
-      image: "/lovable-uploads/ecc2bbe6-d444-4aa1-9204-1543082eee86.png"
+      image: "/lovable-uploads/34914154-1774-4647-a973-b580b0ba3e64.png"
     },
     {
       id: 4,
       name: "Golden Serum (30ml)",
       description: "Our premium gold-infused face serum for radiant, youthful skin in a larger size.",
       price: 350,
-      image: "/lovable-uploads/ecc2bbe6-d444-4aa1-9204-1543082eee86.png"
+      image: "/lovable-uploads/34914154-1774-4647-a973-b580b0ba3e64.png"
     },
     {
       id: 5,
@@ -46,8 +46,8 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
       id: 6,
       name: "Golden Facewash",
       description: "Gentle cleansing facewash that removes impurities while maintaining your skin's natural moisture.",
-      price: 100,
-      image: "/lovable-uploads/1302cda6-651a-40b7-96f5-b5c160a1168f.png"
+      price: 150,
+      image: "/lovable-uploads/da5c0bf6-73f5-4067-9fd4-f0d64d8c0706.png"
     },
     {
       id: 7,
@@ -67,8 +67,8 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
       id: 9,
       name: "Saffron Gel",
       description: "Luxurious saffron-infused gel that brightens skin and reduces pigmentation.",
-      price: 199,
-      image: "/lovable-uploads/0c84bec7-308c-4951-91e8-5465e0871156.png"
+      price: 150,
+      image: "/lovable-uploads/60b6dc7a-818d-4be6-a5d6-6d91245c129a.png"
     }
   ]
 };

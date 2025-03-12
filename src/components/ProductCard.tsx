@@ -1,6 +1,8 @@
 
 import { useState } from 'react';
 import { ShoppingCart, Heart } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/hooks/use-toast';
 
 export interface ProductProps {
   id: number;
@@ -14,10 +16,22 @@ export interface ProductProps {
 const ProductCard = ({ product }: { product: ProductProps }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const { addToCart } = useCart();
+  const { toast } = useToast();
   
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsFavorite(!isFavorite);
+  };
+  
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    addToCart(product);
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your cart`,
+      duration: 3000,
+    });
   };
   
   return (
@@ -62,7 +76,10 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
         <div className="pt-2 flex justify-between items-center">
           <span className="text-lg font-bold text-[#F2A83B]">₹{product.price.toFixed(2)}</span>
           
-          <button className="bg-[#F2A83B] hover:bg-[#F2A83B]/90 text-black flex items-center gap-1 py-2 px-4 rounded-md transition-all duration-300 hover:shadow-lg hover:shadow-[#F2A83B]/20">
+          <button 
+            className="bg-[#F2A83B] hover:bg-[#F2A83B]/90 text-black flex items-center gap-1 py-2 px-4 rounded-md transition-all duration-300 hover:shadow-lg hover:shadow-[#F2A83B]/20"
+            onClick={handleBuyNow}
+          >
             <ShoppingCart size={16} />
             <span>Buy Now</span>
           </button>
