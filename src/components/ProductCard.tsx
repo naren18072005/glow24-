@@ -8,6 +8,7 @@ export interface ProductProps {
   description: string;
   price: number;
   image: string;
+  isBestSeller?: boolean;
 }
 
 const ProductCard = ({ product }: { product: ProductProps }) => {
@@ -40,6 +41,13 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
       <div className="absolute top-4 left-4 bg-[#F2A83B] text-black text-xs font-bold px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
         ORGANIC
       </div>
+      
+      {/* Best Seller Badge */}
+      {product.isBestSeller && (
+        <div className="absolute top-12 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-10 animate-pulse">
+          BEST SELLER
+        </div>
+      )}
       
       <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col space-y-2 transform transition-all duration-300" 
         style={{ transform: isHovered ? 'translateY(-12px)' : 'translateY(0)' }}>

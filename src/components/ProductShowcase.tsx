@@ -9,7 +9,8 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
       name: "Hair Oil",
       description: "Nourishing hair oil that strengthens hair follicles and promotes healthy growth.",
       price: 199,
-      image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png"
+      image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png",
+      isBestSeller: true
     },
     {
       id: 2,
@@ -21,32 +22,53 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
   ],
   skinCare: [
     {
+      id: 3,
+      name: "Golden Serum (15ml)",
+      description: "Luxurious golden serum that brightens and evens skin tone, enhancing your natural glow.",
+      price: 250,
+      image: "/lovable-uploads/65543c00-15b9-499e-b231-356e962bb283.png"
+    },
+    {
+      id: 4,
+      name: "Golden Serum (30ml)",
+      description: "Our premium gold-infused face serum for radiant, youthful skin in a larger size.",
+      price: 350,
+      image: "/lovable-uploads/65543c00-15b9-499e-b231-356e962bb283.png"
+    },
+    {
       id: 5,
-      name: "Hydrating Face Serum",
-      description: "Intensive hydration serum with hyaluronic acid that plumps and revitalizes skin.",
-      price: 349,
-      image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3"
+      name: "Strawberry Lip Balm",
+      description: "Hydrating lip balm with delicious strawberry flavor for soft, plump lips.",
+      price: 70,
+      image: "/lovable-uploads/4ce11bca-8031-47c6-bf3f-c977fb9bf54c.png"
     },
     {
       id: 6,
-      name: "Brightening Eye Cream",
-      description: "Reduces dark circles and puffiness while illuminating the delicate eye area.",
-      price: 299,
-      image: "https://images.unsplash.com/photo-1626273869656-6488a88877a8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3"
+      name: "Golden Facewash",
+      description: "Gentle cleansing facewash that removes impurities while maintaining your skin's natural moisture.",
+      price: 100,
+      image: "/lovable-uploads/1302cda6-651a-40b7-96f5-b5c160a1168f.png"
     },
     {
       id: 7,
-      name: "Nourishing Lip Balm",
-      description: "Rich, moisturizing lip treatment that repairs and protects dry, chapped lips.",
-      price: 99,
-      image: "https://images.unsplash.com/photo-1599305090598-fe179d501228?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3"
+      name: "Natural Soaps",
+      description: "Handcrafted organic soaps made with natural ingredients for a refreshing cleanse.",
+      price: 50,
+      image: "/lovable-uploads/dd983812-448a-4dd7-8403-10c5d9b254e3.png"
     },
     {
       id: 8,
-      name: "Overnight Recovery Mask",
-      description: "Rejuvenating sleep mask that works while you rest for radiant morning skin.",
-      price: 399,
-      image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=2035&auto=format&fit=crop&ixlib=rb-4.0.3"
+      name: "Aloe Vera Gel",
+      description: "Soothing aloe vera gel that calms irritated skin and provides deep hydration.",
+      price: 199,
+      image: "/lovable-uploads/76c84283-304e-4d03-89f9-47ec8760d97e.png"
+    },
+    {
+      id: 9,
+      name: "Saffron Gel",
+      description: "Luxurious saffron-infused gel that brightens skin and reduces pigmentation.",
+      price: 199,
+      image: "/lovable-uploads/823088a0-4794-4d56-88c0-eb61a78be851.png"
     }
   ]
 };
@@ -70,7 +92,7 @@ const ProductShowcase = () => {
     <section id="products" className="section-padding bg-gradient-to-b from-black/95 to-black">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
-          <h5 className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium tracking-wider text-white/90 mb-4">
+          <h5 className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium tracking-wider text-white/90">
             OUR COLLECTIONS
           </h5>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Premium Organic Products</h2>

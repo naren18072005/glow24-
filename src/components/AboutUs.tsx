@@ -17,16 +17,16 @@ const AboutUs = () => {
             
             <div className="relative">
               <p className="text-white/80 leading-relaxed">
-                At Glow24, we believe in the transformative power of nature for your skin and hair. 
-                Our premium organic formulations blend ancient Ayurvedic wisdom with modern beauty science 
-                to create products that nourish, heal, and enhance your natural beauty.
+                Welcome to Glow 24 – where beauty meets nature, and your glow lasts 24/7! ✨ At Glow 24, 
+                we believe that true beauty starts with healthy skin and radiant hair. Our premium skin 
+                and hair oils are crafted with a powerful blend of natural ingredients and cutting-edge 
+                science to deeply nourish, strengthen, and revitalize from within. 
               </p>
               
               <p className="text-white/80 leading-relaxed mt-4">
-                Founded with a passion for clean beauty, our mission is to provide products 
-                that are not only effective but also sustainable and ethical. Every ingredient 
-                is carefully sourced, every formula meticulously tested, and every product crafted 
-                with love and respect for you and our planet.
+                Every drop is designed to enhance your natural glow, leaving you with silky-smooth hair 
+                and flawless, radiant skin. Say goodbye to dullness and dryness — and hello to a glow 
+                that never fades! 🌸💖 Experience the magic of Glow 24 — because you deserve to shine, always! 🌿
               </p>
               
               <div className="absolute -left-5 top-0 w-1 h-full bg-gradient-to-b from-[#F2A83B] to-transparent"></div>

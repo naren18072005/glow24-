@@ -1,5 +1,5 @@
 
-import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { Instagram, WhatsApp } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -21,25 +21,22 @@ const Footer = () => {
           
           <div className="flex items-center justify-center space-x-6 mb-8">
             <a 
-              href="#" 
-              className="text-[#F2A83B]/80 hover:text-[#F2A83B] transition-colors duration-300 hover-scale"
-              aria-label="Facebook"
-            >
-              <Facebook size={24} />
-            </a>
-            <a 
-              href="#" 
+              href="https://instagram.com" 
               className="text-[#F2A83B]/80 hover:text-[#F2A83B] transition-colors duration-300 hover-scale"
               aria-label="Instagram"
+              target="_blank"
+              rel="noreferrer"
             >
-              <Instagram size={24} />
+              <Instagram size={28} />
             </a>
             <a 
-              href="#" 
+              href="https://wa.me/9383717744" 
               className="text-[#F2A83B]/80 hover:text-[#F2A83B] transition-colors duration-300 hover-scale"
-              aria-label="Twitter"
+              aria-label="WhatsApp"
+              target="_blank"
+              rel="noreferrer"
             >
-              <Twitter size={24} />
+              <WhatsApp size={28} />
             </a>
           </div>
           

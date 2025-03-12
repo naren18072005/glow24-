@@ -24,11 +24,19 @@ const Hero = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       <div 
-        className="absolute inset-0 brand-gradient opacity-60 z-0"
+        className="absolute inset-0 bg-black opacity-90 z-0"
         ref={heroRef}
-      ></div>
+      >
+        <div className="absolute inset-0 flex items-center justify-center opacity-15">
+          <img 
+            src="/lovable-uploads/de4d0e6f-1626-4aee-ace1-fe33a44d010e.png" 
+            alt="Glow24 Logo Background" 
+            className="w-full h-full object-contain"
+          />
+        </div>
+      </div>
       
-      <div className="absolute inset-0 bg-black/30 z-10"></div>
+      <div className="absolute inset-0 bg-black/40 z-10"></div>
       
       <div className="container mx-auto px-4 z-20">
         <div className="max-w-3xl mx-auto text-center">
@@ -42,8 +50,21 @@ const Hero = () => {
             </h2>
             
             <p className="text-xl md:text-2xl text-white/80 font-light">
-              Your one-stop solution for premium hair and skin care.
+              Where beauty meets nature, and your glow lasts 24/7! ✨
             </p>
+            
+            <div className="pt-4 px-6 md:px-12">
+              <p className="text-white/80 leading-relaxed">
+                At Glow 24, we believe that true beauty starts with healthy skin and radiant hair. 
+                Our premium skin and hair oils are crafted with a powerful blend of natural ingredients 
+                and cutting-edge science to deeply nourish, strengthen, and revitalize from within. 
+                Every drop is designed to enhance your natural glow, leaving you with silky-smooth hair 
+                and flawless, radiant skin. Say goodbye to dullness and dryness — and hello to a glow that never fades! 🌸💖
+              </p>
+              <p className="text-white/80 leading-relaxed mt-4">
+                Experience the magic of Glow 24 — because you deserve to shine, always! 🌿
+              </p>
+            </div>
             
             <div className="pt-4">
               <a 
