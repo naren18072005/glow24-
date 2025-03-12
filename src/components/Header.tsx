@@ -33,18 +33,19 @@ const Header = () => {
       <div className="container-padding mx-auto">
         <div className="flex items-center justify-between h-20">
           {/* Brand logo and name */}
-          <div className="flex flex-col items-center">
-            <h1 className="text-2xl font-bold tracking-tight text-white">
-              Glow<span className="text-brand">24</span>
-            </h1>
-            <p className="text-xs text-white/70 tracking-widest">NATURAL HAIR & SKIN CARE PRODUCTS</p>
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/de4d0e6f-1626-4aee-ace1-fe33a44d010e.png" 
+              alt="Glow24 Organics" 
+              className="h-16 mr-3"
+            />
+            <p className="text-xs text-white/70 tracking-widest hidden sm:block">NATURAL HAIR & SKIN CARE PRODUCTS</p>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             <a href="#home" className="nav-link">Home</a>
             <a href="#products" className="nav-link">Products</a>
-            <a href="#about" className="nav-link">About Us</a>
             <a href="#contact" className="nav-link">Contact</a>
           </nav>
 
@@ -80,13 +81,6 @@ const Header = () => {
             onClick={() => setMobileMenuOpen(false)}
           >
             Products
-          </a>
-          <a 
-            href="#about" 
-            className="text-2xl font-medium text-white hover:text-brand transition-colors duration-300"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            About Us
           </a>
           <a 
             href="#contact" 

@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Heart } from 'lucide-react';
 
 export interface ProductProps {
   id: number;
@@ -12,10 +12,16 @@ export interface ProductProps {
 
 const ProductCard = ({ product }: { product: ProductProps }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFavorite(!isFavorite);
+  };
   
   return (
     <div 
-      className="group relative h-[400px] glass-card rounded-xl overflow-hidden transition-all duration-500"
+      className="group relative h-[400px] glass-card rounded-xl overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-[#F2A83B]/10"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -30,6 +36,11 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
       </div>
       
+      {/* Product Badge */}
+      <div className="absolute top-4 left-4 bg-[#F2A83B] text-black text-xs font-bold px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+        ORGANIC
+      </div>
+      
       <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col space-y-2 transform transition-all duration-300" 
         style={{ transform: isHovered ? 'translateY(-12px)' : 'translateY(0)' }}>
         <h3 className="text-xl font-bold text-white">
@@ -41,9 +52,9 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
         </p>
         
         <div className="pt-2 flex justify-between items-center">
-          <span className="text-lg font-bold text-white">₹{product.price.toFixed(2)}</span>
+          <span className="text-lg font-bold text-[#F2A83B]">₹{product.price.toFixed(2)}</span>
           
-          <button className="button-success flex items-center gap-1 py-2 px-4 rounded-md">
+          <button className="bg-[#F2A83B] hover:bg-[#F2A83B]/90 text-black flex items-center gap-1 py-2 px-4 rounded-md transition-all duration-300 hover:shadow-lg hover:shadow-[#F2A83B]/20">
             <ShoppingCart size={16} />
             <span>Buy Now</span>
           </button>
@@ -51,9 +62,13 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
       </div>
       
       <div 
-        className="absolute top-4 right-4 h-12 w-12 glass-card rounded-full flex items-center justify-center text-white cursor-pointer opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+        className={`absolute top-4 right-4 h-12 w-12 glass-card rounded-full flex items-center justify-center cursor-pointer transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 ${isFavorite ? 'bg-[#F2A83B]/20' : 'bg-black/30'}`}
+        onClick={toggleFavorite}
       >
-        <ShoppingCart size={18} />
+        <Heart 
+          size={18} 
+          className={isFavorite ? 'text-[#F2A83B] fill-[#F2A83B]' : 'text-white'} 
+        />
       </div>
     </div>
   );
