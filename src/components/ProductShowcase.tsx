@@ -26,21 +26,21 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
       name: "Golden Serum (15ml)",
       description: "Luxurious golden serum that brightens and evens skin tone, enhancing your natural glow.",
       price: 250,
-      image: "/lovable-uploads/65543c00-15b9-499e-b231-356e962bb283.png"
+      image: "/lovable-uploads/ecc2bbe6-d444-4aa1-9204-1543082eee86.png"
     },
     {
       id: 4,
       name: "Golden Serum (30ml)",
       description: "Our premium gold-infused face serum for radiant, youthful skin in a larger size.",
       price: 350,
-      image: "/lovable-uploads/65543c00-15b9-499e-b231-356e962bb283.png"
+      image: "/lovable-uploads/ecc2bbe6-d444-4aa1-9204-1543082eee86.png"
     },
     {
       id: 5,
       name: "Strawberry Lip Balm",
       description: "Hydrating lip balm with delicious strawberry flavor for soft, plump lips.",
       price: 70,
-      image: "/lovable-uploads/4ce11bca-8031-47c6-bf3f-c977fb9bf54c.png"
+      image: "/lovable-uploads/75403ddb-c41d-4a13-a08c-ee678bdd4573.png"
     },
     {
       id: 6,
@@ -54,21 +54,21 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
       name: "Natural Soaps",
       description: "Handcrafted organic soaps made with natural ingredients for a refreshing cleanse.",
       price: 50,
-      image: "/lovable-uploads/dd983812-448a-4dd7-8403-10c5d9b254e3.png"
+      image: "/lovable-uploads/9f5280ac-d499-4bdf-bba1-28e2f3a829d5.png"
     },
     {
       id: 8,
       name: "Aloe Vera Gel",
       description: "Soothing aloe vera gel that calms irritated skin and provides deep hydration.",
       price: 199,
-      image: "/lovable-uploads/76c84283-304e-4d03-89f9-47ec8760d97e.png"
+      image: "/lovable-uploads/fb77df66-ff33-4208-91fe-fab026973b83.png"
     },
     {
       id: 9,
       name: "Saffron Gel",
       description: "Luxurious saffron-infused gel that brightens skin and reduces pigmentation.",
       price: 199,
-      image: "/lovable-uploads/823088a0-4794-4d56-88c0-eb61a78be851.png"
+      image: "/lovable-uploads/0c84bec7-308c-4951-91e8-5465e0871156.png"
     }
   ]
 };
@@ -125,7 +125,7 @@ const ProductShowcase = () => {
           </button>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {productData[category].map((product, index) => (
             <div 
               key={product.id}
