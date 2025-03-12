@@ -1,6 +1,7 @@
 
 import React, { createContext, useState, useEffect } from 'react';
 import { ProductProps } from '@/components/ProductCard';
+import { useNavigate } from 'react-router-dom';
 
 interface CartItem extends ProductProps {
   quantity: number;
@@ -17,6 +18,7 @@ interface CartContextType {
   clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
+  proceedToCheckout: () => void;
 }
 
 export const CartContext = createContext<CartContextType>({
@@ -30,6 +32,7 @@ export const CartContext = createContext<CartContextType>({
   clearCart: () => {},
   openCart: () => {},
   closeCart: () => {},
+  proceedToCheckout: () => {},
 });
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -37,6 +40,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isOpen, setIsOpen] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
   const [itemCount, setItemCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Calculate total amount and item count whenever items change
@@ -99,6 +103,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsOpen(false);
   };
 
+  const proceedToCheckout = () => {
+    closeCart();
+    navigate('/checkout');
+  };
+
   return (
     <CartContext.Provider 
       value={{ 
@@ -111,7 +120,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateQuantity, 
         clearCart,
         openCart,
-        closeCart
+        closeCart,
+        proceedToCheckout
       }}
     >
       {children}

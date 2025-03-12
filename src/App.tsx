@@ -12,16 +12,17 @@ import Payment from "./pages/Payment";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Cart from "./components/Cart";
 
+// Create a new QueryClient instance
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <CartProvider>
-        <Toaster />
-        <Sonner />
-        <Cart />
-        <BrowserRouter>
+      <BrowserRouter>
+        <CartProvider>
+          <Toaster />
+          <Sonner />
+          <Cart />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/checkout" element={<Checkout />} />
@@ -30,8 +31,8 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </CartProvider>
+        </CartProvider>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
