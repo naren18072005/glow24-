@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, ArrowLeft, Package, Truck, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useCart } from '@/hooks/useCart';
 
 const OrderConfirmation = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { clearCart } = useCart();
   const [order, setOrder] = useState<any>(null);
   const [orderNumber, setOrderNumber] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'qr' | 'cod'>('qr');
@@ -19,15 +21,25 @@ const OrderConfirmation = () => {
       return;
     }
     
+    // Make sure cart is cleared
+    clearCart();
+    
     // Get checkout info
     const checkoutInfo = localStorage.getItem('checkoutInfo');
     if (checkoutInfo) {
-      setOrder(JSON.parse(checkoutInfo));
+      const parsedOrder = JSON.parse(checkoutInfo);
+      setOrder(parsedOrder);
+      
+      // Use order ID if available, otherwise generate random number
+      if (parsedOrder.orderId) {
+        // Extract last 6 characters of the order ID to use as order number
+        const idStr = parsedOrder.orderId.toString();
+        setOrderNumber(idStr.substring(idStr.length - 6));
+      } else {
+        const randomOrderNumber = Math.floor(100000 + Math.random() * 900000).toString();
+        setOrderNumber(randomOrderNumber);
+      }
     }
-    
-    // Generate random order number
-    const randomOrderNumber = Math.floor(100000 + Math.random() * 900000).toString();
-    setOrderNumber(randomOrderNumber);
     
     // Get payment method
     const method = localStorage.getItem('paymentMethod') as 'qr' | 'cod';
@@ -49,7 +61,7 @@ const OrderConfirmation = () => {
       localStorage.removeItem('cartTotal');
       localStorage.removeItem('paymentMethod');
     };
-  }, [navigate, toast]);
+  }, [navigate, toast, clearCart]);
   
   // Estimate delivery date (5-7 days from now)
   const getEstimatedDelivery = () => {

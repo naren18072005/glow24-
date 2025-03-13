@@ -1,130 +1,175 @@
 
-import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { useCart } from '@/hooks/useCart';
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ShoppingCart, Menu, X, User } from "lucide-react";
+import { useCart } from "@/hooks/useCart";
+import { useAuth } from "@/contexts/AuthContext";
+import { useMobile } from "@/hooks/use-mobile";
 
 const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { openCart, itemCount } = useCart();
+  const { user, signOut } = useAuth();
+  const isMobile = useMobile();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [scrolled]);
+  }, []);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsMobileMenuOpen(false);
   };
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-black/90 backdrop-blur-lg shadow-lg' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "bg-black/90 backdrop-blur-sm" : "bg-transparent"
       }`}
     >
-      <div className="container-padding mx-auto">
-        <div className="flex items-center justify-between h-20">
-          {/* Brand logo and name */}
-          <div className="flex items-center">
-            <Link to="/">
-              <img 
-                src="/lovable-uploads/de4d0e6f-1626-4aee-ace1-fe33a44d010e.png" 
-                alt="Glow24 Organics" 
-                className="h-16 mr-3"
-              />
-            </Link>
-            <p className="text-xs text-white/70 tracking-widest hidden sm:block">NATURAL HAIR & SKIN CARE PRODUCTS</p>
-          </div>
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="flex items-center justify-between py-4">
+          <Link to="/" className="text-white font-bold text-2xl">
+            Glow24
+          </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <Link to="/" className="nav-link">Home</Link>
-            <Link to="/hair-care" className="nav-link">Hair Care</Link>
-            <Link to="/skin-care" className="nav-link">Skin Care</Link>
-            <a href="#contact" className="nav-link">Contact</a>
-            <button 
-              onClick={openCart}
-              className="nav-link relative"
-              aria-label="Open cart"
+          {/* Desktop Menu */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link
+              to="/"
+              className="text-white/70 hover:text-white transition-colors"
             >
-              Cart
+              Home
+            </Link>
+            <Link
+              to="/hair-care"
+              className="text-white/70 hover:text-white transition-colors"
+            >
+              Hair Care
+            </Link>
+            <Link
+              to="/skin-care"
+              className="text-white/70 hover:text-white transition-colors"
+            >
+              Skin Care
+            </Link>
+          </nav>
+
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <div className="relative group">
+                <Link
+                  to="/account"
+                  className="flex items-center text-white/70 hover:text-white transition-colors"
+                >
+                  <User size={20} />
+                  {!isMobile && <span className="ml-2">Account</span>}
+                </Link>
+              </div>
+            ) : (
+              <Link
+                to="/auth"
+                className="text-white/70 hover:text-white transition-colors flex items-center"
+              >
+                <User size={20} />
+                {!isMobile && <span className="ml-2">Sign In</span>}
+              </Link>
+            )}
+
+            <button
+              onClick={openCart}
+              className="flex items-center text-white/70 hover:text-white transition-colors relative"
+            >
+              <ShoppingCart size={20} />
               {itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#F2A83B] text-black text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                <span className="absolute -top-2 -right-2 bg-[#F2A83B] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {itemCount}
                 </span>
               )}
+              {!isMobile && <span className="ml-2">Cart</span>}
             </button>
-          </nav>
 
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden text-white" 
-            onClick={toggleMobileMenu}
-            aria-label="Toggle mobile menu"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            <button
+              className="md:hidden text-white"
+              onClick={handleMobileMenuToggle}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <div 
-        className={`fixed inset-0 bg-black z-40 transition-all duration-300 ease-in-out transform ${
-          mobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
-        } md:hidden`}
-        style={{ top: '5rem' }}
-      >
-        <nav className="flex flex-col items-center justify-center h-full space-y-8">
-          <Link
-            to="/"
-            className="text-2xl font-medium text-white hover:text-brand transition-colors duration-300"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Home
-          </Link>
-          <Link
-            to="/hair-care"
-            className="text-2xl font-medium text-white hover:text-brand transition-colors duration-300"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Hair Care
-          </Link>
-          <Link
-            to="/skin-care"
-            className="text-2xl font-medium text-white hover:text-brand transition-colors duration-300"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Skin Care
-          </Link>
-          <a 
-            href="#contact" 
-            className="text-2xl font-medium text-white hover:text-brand transition-colors duration-300"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Contact
-          </a>
-          <button 
-            onClick={() => {
-              openCart();
-              setMobileMenuOpen(false);
-            }}
-            className="text-2xl font-medium text-white hover:text-brand transition-colors duration-300"
-          >
-            Cart {itemCount > 0 && `(${itemCount})`}
-          </button>
-        </nav>
-      </div>
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-black/95 backdrop-blur-sm">
+          <nav className="container mx-auto px-4 py-6 flex flex-col space-y-4">
+            <Link
+              to="/"
+              className="text-white hover:text-[#F2A83B] transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              to="/hair-care"
+              className="text-white hover:text-[#F2A83B] transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Hair Care
+            </Link>
+            <Link
+              to="/skin-care"
+              className="text-white hover:text-[#F2A83B] transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Skin Care
+            </Link>
+            
+            {user ? (
+              <>
+                <Link
+                  to="/account"
+                  className="text-white hover:text-[#F2A83B] transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  My Account
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="text-white hover:text-[#F2A83B] transition-colors text-left"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/auth"
+                className="text-white hover:text-[#F2A83B] transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Sign In
+              </Link>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   );
 };

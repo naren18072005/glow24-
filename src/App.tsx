@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Checkout from "./pages/Checkout";
@@ -13,6 +14,8 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import Cart from "./components/Cart";
 import HairCare from "./pages/HairCare";
 import SkinCare from "./pages/SkinCare";
+import Auth from "./pages/Auth";
+import Account from "./pages/Account";
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
@@ -21,21 +24,25 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrowserRouter>
-        <CartProvider>
-          <Toaster />
-          <Sonner />
-          <Cart />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/hair-care" element={<HairCare />} />
-            <Route path="/skin-care" element={<SkinCare />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/payment" element={<Payment />} />
-            <Route path="/order-confirmation" element={<OrderConfirmation />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Toaster />
+            <Sonner />
+            <Cart />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/hair-care" element={<HairCare />} />
+              <Route path="/skin-care" element={<SkinCare />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/order-confirmation" element={<OrderConfirmation />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/account" element={<Account />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </CartProvider>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

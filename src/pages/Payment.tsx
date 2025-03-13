@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCart } from '@/hooks/useCart';
+import { useOrders } from '@/hooks/useOrders';
 
 const Payment = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { clearCart } = useCart();
+  const { updateOrderStatus } = useOrders();
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'completed'>('pending');
   const [countdown, setCountdown] = useState(180); // 3 minutes in seconds
   const [order, setOrder] = useState<any>(null);
@@ -39,6 +41,12 @@ const Payment = () => {
             });
             localStorage.setItem('orderConfirmed', 'true');
             localStorage.setItem('paymentMethod', 'qr');
+            
+            // Update order status in database
+            if (order?.orderId) {
+              updateOrderStatus(order.orderId, 'paid');
+            }
+            
             return 0;
           }
           return prev - 1;
@@ -49,7 +57,7 @@ const Payment = () => {
     return () => {
       clearInterval(timer);
     };
-  }, [navigate, paymentStatus, toast]);
+  }, [navigate, paymentStatus, toast, updateOrderStatus, order]);
   
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -57,11 +65,17 @@ const Payment = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
   
-  const handlePaymentConfirmation = () => {
+  const handlePaymentConfirmation = async () => {
     setPaymentStatus('completed');
     clearCart();
     localStorage.setItem('orderConfirmed', 'true');
     localStorage.setItem('paymentMethod', 'qr');
+    
+    // Update order status in database
+    if (order?.orderId) {
+      await updateOrderStatus(order.orderId, 'paid');
+    }
+    
     navigate('/order-confirmation');
   };
   
