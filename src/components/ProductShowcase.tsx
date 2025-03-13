@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import ProductCard, { ProductProps } from './ProductCard';
+import { Link } from 'react-router-dom';
 
 const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
   hairCare: [
@@ -48,27 +49,6 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
       description: "Gentle cleansing facewash that removes impurities while maintaining your skin's natural moisture.",
       price: 150,
       image: "/lovable-uploads/da5c0bf6-73f5-4067-9fd4-f0d64d8c0706.png"
-    },
-    {
-      id: 7,
-      name: "Natural Soaps",
-      description: "Handcrafted organic soaps made with natural ingredients for a refreshing cleanse.",
-      price: 50,
-      image: "/lovable-uploads/9f5280ac-d499-4bdf-bba1-28e2f3a829d5.png"
-    },
-    {
-      id: 8,
-      name: "Aloe Vera Gel",
-      description: "Soothing aloe vera gel that calms irritated skin and provides deep hydration.",
-      price: 199,
-      image: "/lovable-uploads/fb77df66-ff33-4208-91fe-fab026973b83.png"
-    },
-    {
-      id: 9,
-      name: "Saffron Gel",
-      description: "Luxurious saffron-infused gel that brightens skin and reduces pigmentation.",
-      price: 150,
-      image: "/lovable-uploads/60b6dc7a-818d-4be6-a5d6-6d91245c129a.png"
     }
   ]
 };
@@ -135,6 +115,15 @@ const ProductShowcase = () => {
               <ProductCard product={product} />
             </div>
           ))}
+        </div>
+        
+        <div className="text-center mt-10">
+          <Link 
+            to={category === 'hairCare' ? "/hair-care" : "/skin-care"}
+            className="px-6 py-3 bg-[#F2A83B] text-black rounded-md hover:bg-[#F2A83B]/90 transition-colors inline-flex items-center"
+          >
+            View All {category === 'hairCare' ? 'Hair Care' : 'Skin Care'} Products
+          </Link>
         </div>
       </div>
     </section>

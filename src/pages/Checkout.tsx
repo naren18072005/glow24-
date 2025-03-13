@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/hooks/useCart';
@@ -32,11 +31,10 @@ const Checkout = () => {
   });
   const [isCoimbatore, setIsCoimbatore] = useState(false);
   const [freeShipping, setFreeShipping] = useState(false);
-  const [shippingCost, setShippingCost] = useState(40);
+  const [shippingCost, setShippingCost] = useState(100);
   const [isContinuing, setIsContinuing] = useState(false);
   
   useEffect(() => {
-    // Check if cart is empty, redirect to homepage if it is
     const storedItems = localStorage.getItem('cartItems');
     if (!storedItems || JSON.parse(storedItems).length === 0) {
       navigate('/');
@@ -44,13 +42,11 @@ const Checkout = () => {
   }, [navigate]);
   
   useEffect(() => {
-    // Check if customer is from Coimbatore based on pincode
     const coimbatorePincodes = ['641001', '641002', '641003', '641004', '641005', '641006', '641007', '641008', '641009', '641010', '641011', '641012', '641013', '641014', '641015', '641016', '641017', '641018', '641019', '641020', '641021', '641022', '641023', '641024', '641025', '641026', '641027', '641028', '641029', '641030', '641031', '641032', '641033', '641034', '641035', '641036', '641037', '641038', '641039', '641040', '641041', '641042', '641043', '641044', '641045', '641046', '641047', '641048', '641049', '641050', '641061', '641062', '641063', '641064', '641065', '641101', '641102', '641103', '641104', '641105', '641106', '641107', '641108', '641109', '641110', '641111', '641112', '641113', '641114', '641201', '641202', '641301', '641302', '641303', '641304', '641305', '641401', '641402', '641403', '641404', '641405', '641406', '641407'];
     
     const isCoimbatorePin = coimbatorePincodes.includes(formValues.pincode);
     setIsCoimbatore(isCoimbatorePin);
     
-    // Check if order qualifies for free shipping (Coimbatore + order > ₹999)
     const qualifiesForFreeShipping = isCoimbatorePin && totalAmount >= 999;
     setFreeShipping(qualifiesForFreeShipping);
   }, [formValues.pincode, totalAmount]);
@@ -63,7 +59,6 @@ const Checkout = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form
     for (const [key, value] of Object.entries(formValues)) {
       if (!value) {
         toast({
@@ -75,10 +70,8 @@ const Checkout = () => {
       }
     }
     
-    // Move to payment
     setIsContinuing(true);
     
-    // If payment method is QR, navigate to QR page
     if (formValues.paymentMethod === 'qr') {
       localStorage.setItem('checkoutInfo', JSON.stringify({
         customer: formValues,
@@ -89,7 +82,6 @@ const Checkout = () => {
       }));
       navigate('/payment');
     } else {
-      // For COD, show confirmation and redirect to confirmation page
       localStorage.setItem('orderConfirmed', 'true');
       localStorage.setItem('paymentMethod', 'cod');
       clearCart();
@@ -109,7 +101,6 @@ const Checkout = () => {
         </button>
         
         <div className="flex flex-col md:flex-row gap-10">
-          {/* Checkout form */}
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-white mb-6">Checkout</h1>
             
@@ -258,7 +249,6 @@ const Checkout = () => {
             </form>
           </div>
           
-          {/* Order summary */}
           <div className="w-full md:w-96">
             <div className="bg-white/5 rounded-lg p-6 border border-white/10 sticky top-6">
               <h2 className="text-xl font-semibold text-white mb-4">Order Summary</h2>

@@ -11,6 +11,8 @@ import Checkout from "./pages/Checkout";
 import Payment from "./pages/Payment";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Cart from "./components/Cart";
+import HairCare from "./pages/HairCare";
+import SkinCare from "./pages/SkinCare";
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
@@ -25,6 +27,8 @@ const App = () => (
           <Cart />
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/hair-care" element={<HairCare />} />
+            <Route path="/skin-care" element={<SkinCare />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/payment" element={<Payment />} />
             <Route path="/order-confirmation" element={<OrderConfirmation />} />
