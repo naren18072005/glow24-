@@ -22,7 +22,7 @@ const Footer = () => {
           
           <div className="flex items-center justify-center space-x-6 mb-8">
             <a 
-              href="https://www.instagram.com/glow_24_?igsh=OHE0aG81bjY0cXBm" 
+              href="https://www.instagram.com/glow__24__?igsh=OHE0aG81bjY0cXBm" 
               className="text-[#F2A83B]/80 hover:text-[#F2A83B] transition-colors duration-300 hover-scale"
               aria-label="Instagram"
               target="_blank"
