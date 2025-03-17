@@ -16,7 +16,7 @@ export const useOrders = () => {
 
   const createOrder = async (orderDetails: {
     shippingAddress: string;
-    paymentMethod: 'razorpay' | 'qr' | 'cod';
+    paymentMethod: 'upi' | 'qr' | 'cod';
     shippingCost: number;
     grandTotal: number;
     customerName?: string;
@@ -90,23 +90,24 @@ export const useOrders = () => {
       }
 
       // Handle payment based on selected method
-      if (orderDetails.paymentMethod === 'razorpay') {
-        // Initiate payment with Razorpay
+      if (orderDetails.paymentMethod === 'upi') {
+        // Initiate payment with UPI
         const paymentResponse = await initiatePayment({
           orderId: orderId,
           amount: orderDetails.grandTotal,
-          gatewayType: 'razorpay',
+          gatewayType: 'upi',
           customerEmail: orderDetails.customerEmail,
           customerName: orderDetails.customerName,
-          customerPhone: orderDetails.customerPhone
+          customerPhone: orderDetails.customerPhone,
+          upiId: "naren1872005@oksbi" // Your UPI ID
         });
 
         if (paymentResponse.success && paymentResponse.redirectUrl) {
           // Store payment ID for verification
           localStorage.setItem('pendingPaymentId', paymentResponse.paymentId || '');
-          localStorage.setItem('paymentMethod', 'razorpay');
+          localStorage.setItem('paymentMethod', 'upi');
           
-          // Redirect to payment gateway
+          // Redirect to UPI app
           window.location.href = paymentResponse.redirectUrl;
           return { id: orderId };
         } else {

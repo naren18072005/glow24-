@@ -1,53 +1,44 @@
 
 import React from 'react';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface PaymentMethodSelectorProps {
-  paymentMethod: 'razorpay' | 'qr' | 'cod';
+  paymentMethod: 'upi' | 'qr' | 'cod';
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 }
 
 const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMethodSelectorProps) => {
+  // Custom handler for RadioGroup since it has a different event structure
+  const handleRadioChange = (value: string) => {
+    handleInputChange({
+      target: {
+        name: 'paymentMethod',
+        value
+      }
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
   return (
     <div className="bg-white/5 rounded-lg p-6 border border-white/10">
       <h2 className="text-xl font-semibold text-white mb-4">Payment Method</h2>
       
-      <div className="space-y-3">
-        <label className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
-          <input
-            type="radio"
-            name="paymentMethod"
-            value="razorpay"
-            checked={paymentMethod === 'razorpay'}
-            onChange={handleInputChange}
-            className="form-radio h-5 w-5 text-[#F2A83B]"
-          />
-          <span className="text-white">Pay with Razorpay (Credit/Debit Card, UPI, Netbanking)</span>
-        </label>
+      <RadioGroup value={paymentMethod} onValueChange={handleRadioChange} className="space-y-3">
+        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
+          <RadioGroupItem value="upi" id="upi" className="text-[#F2A83B]" />
+          <Label htmlFor="upi" className="text-white cursor-pointer">Pay with UPI (Google Pay/PhonePe/Paytm)</Label>
+        </div>
         
-        <label className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
-          <input
-            type="radio"
-            name="paymentMethod"
-            value="qr"
-            checked={paymentMethod === 'qr'}
-            onChange={handleInputChange}
-            className="form-radio h-5 w-5 text-[#F2A83B]"
-          />
-          <span className="text-white">Pay via QR Code (UPI/Google Pay/PhonePe)</span>
-        </label>
+        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
+          <RadioGroupItem value="qr" id="qr" className="text-[#F2A83B]" />
+          <Label htmlFor="qr" className="text-white cursor-pointer">Pay via QR Code (UPI/Google Pay/PhonePe)</Label>
+        </div>
         
-        <label className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
-          <input
-            type="radio"
-            name="paymentMethod"
-            value="cod"
-            checked={paymentMethod === 'cod'}
-            onChange={handleInputChange}
-            className="form-radio h-5 w-5 text-[#F2A83B]"
-          />
-          <span className="text-white">Cash on Delivery (COD)</span>
-        </label>
-      </div>
+        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
+          <RadioGroupItem value="cod" id="cod" className="text-[#F2A83B]" />
+          <Label htmlFor="cod" className="text-white cursor-pointer">Cash on Delivery (COD)</Label>
+        </div>
+      </RadioGroup>
     </div>
   );
 };
