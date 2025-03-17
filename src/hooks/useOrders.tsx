@@ -23,56 +23,15 @@ export const useOrders = () => {
     customerEmail?: string;
     customerPhone?: string;
   }) => {
-    if (!user) {
-      toast({
-        title: "Authentication required",
-        description: "Please sign in to complete your order",
-        variant: "destructive",
-      });
-      navigate('/auth', { state: { from: '/checkout' } });
-      return null;
-    }
-
     setIsCreating(true);
 
     try {
-      // Create the order
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert({
-          user_id: user.id,
-          total: orderDetails.grandTotal,
-          shipping_address: orderDetails.shippingAddress,
-          payment_method: orderDetails.paymentMethod,
-          status: orderDetails.paymentMethod === 'cod' ? 'pending' : 'processing'
-        })
-        .select()
-        .single();
-
-      if (orderError) {
-        throw orderError;
-      }
-
-      // Create order items
-      const orderItems = items.map(item => ({
-        order_id: order.id,
-        product_id: item.id,
-        product_name: item.name,
-        quantity: item.quantity,
-        price: item.price
-      }));
-
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(orderItems);
-
-      if (itemsError) {
-        throw itemsError;
-      }
-
-      // Store order information for later use
+      // Generate a guest ID if user is not authenticated
+      const orderId = crypto.randomUUID();
+      
+      // Store order information for later use regardless of authentication
       localStorage.setItem('checkoutInfo', JSON.stringify({
-        orderId: order.id,
+        orderId: orderId,
         customer: {
           address: orderDetails.shippingAddress,
           name: orderDetails.customerName,
@@ -85,11 +44,49 @@ export const useOrders = () => {
         grandTotal: orderDetails.grandTotal,
       }));
 
+      // If user is authenticated, save order to database
+      if (user) {
+        // Create the order in database
+        const { data: order, error: orderError } = await supabase
+          .from('orders')
+          .insert({
+            id: orderId,
+            user_id: user.id,
+            total: orderDetails.grandTotal,
+            shipping_address: orderDetails.shippingAddress,
+            payment_method: orderDetails.paymentMethod,
+            status: orderDetails.paymentMethod === 'cod' ? 'pending' : 'processing'
+          })
+          .select()
+          .single();
+
+        if (orderError) {
+          throw orderError;
+        }
+
+        // Create order items in database
+        const orderItems = items.map(item => ({
+          order_id: order.id,
+          product_id: item.id,
+          product_name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        }));
+
+        const { error: itemsError } = await supabase
+          .from('order_items')
+          .insert(orderItems);
+
+        if (itemsError) {
+          throw itemsError;
+        }
+      }
+
       // Handle payment based on selected method
       if (orderDetails.paymentMethod === 'razorpay') {
         // Initiate payment with Razorpay
         const paymentResponse = await initiatePayment({
-          orderId: order.id,
+          orderId: orderId,
           amount: orderDetails.grandTotal,
           gatewayType: 'razorpay',
           customerEmail: orderDetails.customerEmail,
@@ -104,7 +101,7 @@ export const useOrders = () => {
           
           // Redirect to payment gateway
           window.location.href = paymentResponse.redirectUrl;
-          return order;
+          return { id: orderId };
         } else {
           // Handle payment initiation failure
           toast({
@@ -125,7 +122,7 @@ export const useOrders = () => {
         navigate('/order-confirmation');
       }
 
-      return order;
+      return { id: orderId };
     } catch (error: any) {
       toast({
         title: "Error creating order",
@@ -140,12 +137,15 @@ export const useOrders = () => {
 
   const updateOrderStatus = async (orderId: string, status: string) => {
     try {
-      const { error } = await supabase
-        .from('orders')
-        .update({ status })
-        .eq('id', orderId);
+      // Only update in database if user is authenticated
+      if (user) {
+        const { error } = await supabase
+          .from('orders')
+          .update({ status })
+          .eq('id', orderId);
 
-      if (error) throw error;
+        if (error) throw error;
+      }
 
       return true;
     } catch (error: any) {

@@ -1,8 +1,6 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/hooks/useCart';
-import { useAuth } from '@/contexts/AuthContext';
 
 interface OrderSummaryProps {
   freeShipping: boolean;
@@ -11,8 +9,6 @@ interface OrderSummaryProps {
 
 const OrderSummary = ({ freeShipping, shippingCost }: OrderSummaryProps) => {
   const { items, totalAmount } = useCart();
-  const { user } = useAuth();
-  const navigate = useNavigate();
   
   return (
     <div className="bg-white/5 rounded-lg p-6 border border-white/10 sticky top-6">
@@ -52,21 +48,6 @@ const OrderSummary = ({ freeShipping, shippingCost }: OrderSummaryProps) => {
           </div>
         </div>
       </div>
-
-      {!user && (
-        <div className="mt-4 p-3 bg-white/10 rounded-md">
-          <p className="text-white/70 text-sm">
-            Already have an account? 
-            <button 
-              type="button"
-              onClick={() => navigate('/auth', { state: { from: '/checkout' } })}
-              className="text-[#F2A83B] ml-2 hover:underline"
-            >
-              Sign in
-            </button>
-          </p>
-        </div>
-      )}
     </div>
   );
 };
