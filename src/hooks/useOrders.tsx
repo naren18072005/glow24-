@@ -5,7 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/hooks/useCart';
-import { initiatePayment } from '@/services/paymentService';
 
 export const useOrders = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -16,7 +15,7 @@ export const useOrders = () => {
 
   const createOrder = async (orderDetails: {
     shippingAddress: string;
-    paymentMethod: 'upi' | 'qr' | 'cod';
+    paymentMethod: 'qr' | 'cod';
     shippingCost: number;
     grandTotal: number;
     customerName?: string;
@@ -90,36 +89,7 @@ export const useOrders = () => {
       }
 
       // Handle payment based on selected method
-      if (orderDetails.paymentMethod === 'upi') {
-        // Initiate payment with UPI
-        const paymentResponse = await initiatePayment({
-          orderId: orderId,
-          amount: orderDetails.grandTotal,
-          gatewayType: 'upi',
-          customerEmail: orderDetails.customerEmail,
-          customerName: orderDetails.customerName,
-          customerPhone: orderDetails.customerPhone,
-          upiId: "naren1872005@oksbi" // Your UPI ID
-        });
-
-        if (paymentResponse.success && paymentResponse.redirectUrl) {
-          // Store payment ID for verification
-          localStorage.setItem('pendingPaymentId', paymentResponse.paymentId || '');
-          localStorage.setItem('paymentMethod', 'upi');
-          
-          // Redirect to UPI app
-          window.location.href = paymentResponse.redirectUrl;
-          return { id: orderId };
-        } else {
-          // Handle payment initiation failure
-          toast({
-            title: "Payment Error",
-            description: paymentResponse.message || "Failed to initiate payment. Please try again.",
-            variant: "destructive",
-          });
-          return null;
-        }
-      } else if (orderDetails.paymentMethod === 'qr') {
+      if (orderDetails.paymentMethod === 'qr') {
         // For QR payment, redirect to QR page
         navigate('/payment');
       } else {

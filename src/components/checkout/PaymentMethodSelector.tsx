@@ -25,11 +25,6 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
       
       <RadioGroup value={paymentMethod} onValueChange={handleRadioChange} className="space-y-3">
         <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
-          <RadioGroupItem value="upi" id="upi" className="text-[#F2A83B]" />
-          <Label htmlFor="upi" className="text-white cursor-pointer">Pay with UPI (Google Pay/PhonePe/Paytm)</Label>
-        </div>
-        
-        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
           <RadioGroupItem value="qr" id="qr" className="text-[#F2A83B]" />
           <Label htmlFor="qr" className="text-white cursor-pointer">Pay via QR Code (UPI/Google Pay/PhonePe)</Label>
         </div>
