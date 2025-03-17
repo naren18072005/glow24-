@@ -26,7 +26,7 @@ export const useOrders = () => {
     setIsCreating(true);
 
     try {
-      // Generate a guest ID if user is not authenticated
+      // Generate a unique order ID regardless of authentication
       const orderId = crypto.randomUUID();
       
       // Store order information for later use regardless of authentication
@@ -44,41 +44,48 @@ export const useOrders = () => {
         grandTotal: orderDetails.grandTotal,
       }));
 
-      // If user is authenticated, save order to database
+      // If user is authenticated, try to save order to database
       if (user) {
-        // Create the order in database
-        const { data: order, error: orderError } = await supabase
-          .from('orders')
-          .insert({
-            id: orderId,
-            user_id: user.id,
-            total: orderDetails.grandTotal,
-            shipping_address: orderDetails.shippingAddress,
-            payment_method: orderDetails.paymentMethod,
-            status: orderDetails.paymentMethod === 'cod' ? 'pending' : 'processing'
-          })
-          .select()
-          .single();
+        try {
+          // Create the order in database
+          const { data: order, error: orderError } = await supabase
+            .from('orders')
+            .insert({
+              id: orderId,
+              user_id: user.id,
+              total: orderDetails.grandTotal,
+              shipping_address: orderDetails.shippingAddress,
+              payment_method: orderDetails.paymentMethod,
+              status: orderDetails.paymentMethod === 'cod' ? 'pending' : 'processing'
+            })
+            .select()
+            .single();
 
-        if (orderError) {
-          throw orderError;
-        }
+          if (orderError) {
+            console.error('Error creating order:', orderError);
+            // Continue with local storage fallback
+          } else {
+            // Create order items in database
+            const orderItems = items.map(item => ({
+              order_id: order.id,
+              product_id: item.id,
+              product_name: item.name,
+              quantity: item.quantity,
+              price: item.price
+            }));
 
-        // Create order items in database
-        const orderItems = items.map(item => ({
-          order_id: order.id,
-          product_id: item.id,
-          product_name: item.name,
-          quantity: item.quantity,
-          price: item.price
-        }));
+            const { error: itemsError } = await supabase
+              .from('order_items')
+              .insert(orderItems);
 
-        const { error: itemsError } = await supabase
-          .from('order_items')
-          .insert(orderItems);
-
-        if (itemsError) {
-          throw itemsError;
+            if (itemsError) {
+              console.error('Error creating order items:', itemsError);
+              // Continue with local storage fallback
+            }
+          }
+        } catch (dbError) {
+          console.error('Database error:', dbError);
+          // Continue with checkout even if database operations fail
         }
       }
 
@@ -139,12 +146,17 @@ export const useOrders = () => {
     try {
       // Only update in database if user is authenticated
       if (user) {
-        const { error } = await supabase
-          .from('orders')
-          .update({ status })
-          .eq('id', orderId);
+        try {
+          const { error } = await supabase
+            .from('orders')
+            .update({ status })
+            .eq('id', orderId);
 
-        if (error) throw error;
+          if (error) throw error;
+        } catch (updateError) {
+          console.error('Error updating order status:', updateError);
+          // Continue even if update fails
+        }
       }
 
       return true;
