@@ -33,7 +33,10 @@ const Checkout = () => {
       shippingAddress,
       paymentMethod: formValues.paymentMethod,
       shippingCost: freeShipping ? 0 : shippingCost,
-      grandTotal: freeShipping ? totalAmount : totalAmount + shippingCost
+      grandTotal: freeShipping ? totalAmount : totalAmount + shippingCost,
+      customerName: formValues.name,
+      customerEmail: formValues.email,
+      customerPhone: formValues.phone
     });
   };
   
@@ -64,9 +67,9 @@ const Checkout = () => {
               >
                 {isCreating 
                   ? 'Processing...' 
-                  : formValues.paymentMethod === 'qr' 
-                    ? 'Continue to Payment' 
-                    : 'Place Order'}
+                  : formValues.paymentMethod === 'cod' 
+                    ? 'Place Order' 
+                    : 'Continue to Payment'}
               </button>
             </form>
           </div>

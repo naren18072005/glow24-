@@ -13,7 +13,7 @@ export interface CheckoutFormValues {
   city: string;
   state: string;
   pincode: string;
-  paymentMethod: 'qr' | 'cod';
+  paymentMethod: 'razorpay' | 'qr' | 'cod';
 }
 
 export const useCheckoutForm = () => {
@@ -30,7 +30,7 @@ export const useCheckoutForm = () => {
     city: '',
     state: '',
     pincode: '',
-    paymentMethod: 'qr',
+    paymentMethod: 'razorpay', // Changed default to Razorpay
   });
   
   const [isCoimbatore, setIsCoimbatore] = useState(false);

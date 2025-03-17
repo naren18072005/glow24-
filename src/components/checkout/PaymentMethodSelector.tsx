@@ -2,7 +2,7 @@
 import React from 'react';
 
 interface PaymentMethodSelectorProps {
-  paymentMethod: 'qr' | 'cod';
+  paymentMethod: 'razorpay' | 'qr' | 'cod';
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 }
 
@@ -12,6 +12,18 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
       <h2 className="text-xl font-semibold text-white mb-4">Payment Method</h2>
       
       <div className="space-y-3">
+        <label className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="razorpay"
+            checked={paymentMethod === 'razorpay'}
+            onChange={handleInputChange}
+            className="form-radio h-5 w-5 text-[#F2A83B]"
+          />
+          <span className="text-white">Pay with Razorpay (Credit/Debit Card, UPI, Netbanking)</span>
+        </label>
+        
         <label className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
           <input
             type="radio"

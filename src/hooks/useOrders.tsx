@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/hooks/useCart';
+import { initiatePayment } from '@/services/paymentService';
 
 export const useOrders = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -15,9 +16,12 @@ export const useOrders = () => {
 
   const createOrder = async (orderDetails: {
     shippingAddress: string;
-    paymentMethod: 'qr' | 'cod';
+    paymentMethod: 'razorpay' | 'qr' | 'cod';
     shippingCost: number;
     grandTotal: number;
+    customerName?: string;
+    customerEmail?: string;
+    customerPhone?: string;
   }) => {
     if (!user) {
       toast({
@@ -71,6 +75,9 @@ export const useOrders = () => {
         orderId: order.id,
         customer: {
           address: orderDetails.shippingAddress,
+          name: orderDetails.customerName,
+          email: orderDetails.customerEmail,
+          phone: orderDetails.customerPhone
         },
         items,
         totalAmount,
@@ -78,9 +85,40 @@ export const useOrders = () => {
         grandTotal: orderDetails.grandTotal,
       }));
 
-      if (orderDetails.paymentMethod === 'qr') {
+      // Handle payment based on selected method
+      if (orderDetails.paymentMethod === 'razorpay') {
+        // Initiate payment with Razorpay
+        const paymentResponse = await initiatePayment({
+          orderId: order.id,
+          amount: orderDetails.grandTotal,
+          gatewayType: 'razorpay',
+          customerEmail: orderDetails.customerEmail,
+          customerName: orderDetails.customerName,
+          customerPhone: orderDetails.customerPhone
+        });
+
+        if (paymentResponse.success && paymentResponse.redirectUrl) {
+          // Store payment ID for verification
+          localStorage.setItem('pendingPaymentId', paymentResponse.paymentId || '');
+          localStorage.setItem('paymentMethod', 'razorpay');
+          
+          // Redirect to payment gateway
+          window.location.href = paymentResponse.redirectUrl;
+          return order;
+        } else {
+          // Handle payment initiation failure
+          toast({
+            title: "Payment Error",
+            description: paymentResponse.message || "Failed to initiate payment. Please try again.",
+            variant: "destructive",
+          });
+          return null;
+        }
+      } else if (orderDetails.paymentMethod === 'qr') {
+        // For QR payment, redirect to QR page
         navigate('/payment');
       } else {
+        // For COD, go directly to confirmation
         localStorage.setItem('orderConfirmed', 'true');
         localStorage.setItem('paymentMethod', 'cod');
         clearCart();
