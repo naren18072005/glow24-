@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
 interface PaymentMethodSelectorProps {
-  paymentMethod: 'upi' | 'qr' | 'cod';
+  paymentMethod: 'razorpay' | 'qr' | 'cod';
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 }
 
@@ -24,6 +24,11 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
       <h2 className="text-xl font-semibold text-white mb-4">Payment Method</h2>
       
       <RadioGroup value={paymentMethod} onValueChange={handleRadioChange} className="space-y-3">
+        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
+          <RadioGroupItem value="razorpay" id="razorpay" className="text-[#F2A83B]" />
+          <Label htmlFor="razorpay" className="text-white cursor-pointer">Pay Online (Credit/Debit Card, UPI, Wallets)</Label>
+        </div>
+        
         <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
           <RadioGroupItem value="qr" id="qr" className="text-[#F2A83B]" />
           <Label htmlFor="qr" className="text-white cursor-pointer">Pay via QR Code (UPI/Google Pay/PhonePe)</Label>

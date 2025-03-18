@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/hooks/useCart';
+import { createRazorpayOrder, openRazorpayCheckout } from '@/services/paymentService';
 
 export const useOrders = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -15,7 +16,7 @@ export const useOrders = () => {
 
   const createOrder = async (orderDetails: {
     shippingAddress: string;
-    paymentMethod: 'qr' | 'cod';
+    paymentMethod: 'razorpay' | 'qr' | 'cod';
     shippingCost: number;
     grandTotal: number;
     customerName?: string;
@@ -42,6 +43,32 @@ export const useOrders = () => {
         shippingCost: orderDetails.shippingCost,
         grandTotal: orderDetails.grandTotal,
       }));
+
+      // Create payment transaction for Razorpay
+      let paymentId = null;
+      if (user) {
+        try {
+          const { data: transaction, error } = await supabase
+            .from('payment_transactions')
+            .insert({
+              order_id: orderId,
+              amount: orderDetails.grandTotal,
+              payment_gateway: orderDetails.paymentMethod,
+              status: 'pending'
+            })
+            .select()
+            .single();
+          
+          if (error) {
+            console.error('Error creating payment transaction:', error);
+          } else {
+            paymentId = transaction.id;
+            localStorage.setItem('pendingPaymentId', paymentId);
+          }
+        } catch (dbError) {
+          console.error('Database error creating payment transaction:', dbError);
+        }
+      }
 
       // If user is authenticated, try to save order to database
       if (user) {
@@ -89,7 +116,18 @@ export const useOrders = () => {
       }
 
       // Handle payment based on selected method
-      if (orderDetails.paymentMethod === 'qr') {
+      if (orderDetails.paymentMethod === 'razorpay') {
+        handleRazorpayPayment(
+          orderId,
+          orderDetails.grandTotal,
+          {
+            name: orderDetails.customerName || 'Customer',
+            email: orderDetails.customerEmail || '',
+            phone: orderDetails.customerPhone || '',
+            address: orderDetails.shippingAddress
+          }
+        );
+      } else if (orderDetails.paymentMethod === 'qr') {
         // For QR payment, redirect to QR page
         navigate('/payment');
       } else {
@@ -110,6 +148,87 @@ export const useOrders = () => {
       return null;
     } finally {
       setIsCreating(false);
+    }
+  };
+
+  const handleRazorpayPayment = async (
+    orderId: string,
+    amount: number,
+    customerInfo: {
+      name: string;
+      email: string;
+      phone: string;
+      address: string;
+    }
+  ) => {
+    try {
+      // Create order in Razorpay
+      const razorpayOrder = await createRazorpayOrder(
+        amount * 100, // Razorpay accepts amount in paise
+        orderId
+      );
+      
+      if (!razorpayOrder) {
+        throw new Error('Failed to create Razorpay order');
+      }
+      
+      // Open Razorpay checkout
+      await openRazorpayCheckout(
+        {
+          key: 'rzp_test_YourTestKeyHere', // Replace with your Razorpay test key
+          amount: amount * 100, // in paise
+          currency: 'INR',
+          name: 'Glow24 Organics',
+          description: 'Order #' + orderId.substring(0, 8),
+          order_id: razorpayOrder.id,
+          prefill: {
+            name: customerInfo.name,
+            email: customerInfo.email,
+            contact: customerInfo.phone
+          },
+          notes: {
+            address: customerInfo.address
+          },
+          theme: {
+            color: '#F2A83B'
+          }
+        },
+        (response) => {
+          // Payment successful
+          localStorage.setItem('razorpayResponse', JSON.stringify(response));
+          localStorage.setItem('orderConfirmed', 'true');
+          localStorage.setItem('paymentMethod', 'razorpay');
+          clearCart();
+          
+          // Update payment status
+          updateOrderStatus(orderId, 'paid');
+          
+          // Navigate to confirmation page
+          navigate('/order-confirmation');
+        },
+        (error) => {
+          // Payment failed
+          console.error('Razorpay payment failed:', error);
+          toast({
+            title: "Payment Failed",
+            description: error.description || "Your payment could not be processed. Please try again.",
+            variant: "destructive",
+          });
+          
+          // Navigate back to checkout
+          navigate('/checkout');
+        }
+      );
+    } catch (error: any) {
+      console.error('Razorpay error:', error);
+      toast({
+        title: "Payment Error",
+        description: error.message || "There was a problem processing your payment. Please try again.",
+        variant: "destructive",
+      });
+      
+      // Navigate back to checkout
+      navigate('/checkout');
     }
   };
 

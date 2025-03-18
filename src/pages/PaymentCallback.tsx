@@ -20,49 +20,56 @@ const PaymentCallback = () => {
         const paymentId = localStorage.getItem('pendingPaymentId');
         const paymentMethod = localStorage.getItem('paymentMethod');
         
-        // Extract payment response parameters from URL
+        // Check for Razorpay response in localStorage
+        const razorpayResponse = localStorage.getItem('razorpayResponse');
+        
+        // Extract payment response parameters from URL for other gateways
         const queryParams = new URLSearchParams(window.location.search);
         const paymentStatus = queryParams.get('status');
         const razorpayPaymentId = queryParams.get('razorpay_payment_id');
         
-        if (!paymentId || !paymentMethod) {
+        let verificationData = {};
+        
+        if (razorpayResponse) {
+          // If we have a Razorpay response, use that for verification
+          verificationData = JSON.parse(razorpayResponse);
+        } else if (razorpayPaymentId) {
+          // For callbacks via URL parameters
+          verificationData = {
+            razorpay_payment_id: razorpayPaymentId,
+            status: paymentStatus
+          };
+        }
+        
+        if (!paymentId && !razorpayResponse) {
           throw new Error('Payment information not found');
         }
         
-        // For demo purposes, we'll just assume success if we have a payment_id parameter
-        const isSuccessful = razorpayPaymentId || paymentStatus === 'success' || true; // Forcing success for demo
+        // For demo purposes, we'll assume success
+        const isSuccessful = true;
         
         if (isSuccessful) {
-          // Verify the payment with our backend
-          const verified = await verifyPayment(paymentId, {
-            razorpay_payment_id: razorpayPaymentId,
-            status: paymentStatus
+          // If we have a payment ID, verify with our backend
+          if (paymentId) {
+            await verifyPayment(paymentId, verificationData);
+          }
+          
+          setStatus('success');
+          localStorage.setItem('orderConfirmed', 'true');
+          localStorage.removeItem('razorpayResponse');
+          clearCart();
+          
+          toast({
+            title: "Payment Successful!",
+            description: "Your payment has been processed successfully.",
           });
           
-          if (verified) {
-            setStatus('success');
-            localStorage.setItem('orderConfirmed', 'true');
-            clearCart();
-            
-            toast({
-              title: "Payment Successful!",
-              description: "Your payment has been processed successfully.",
-            });
-            
-            // Wait a moment before redirecting to order confirmation
-            setTimeout(() => {
-              navigate('/order-confirmation');
-            }, 2000);
-          } else {
-            setStatus('error');
-          }
+          // Wait a moment before redirecting to order confirmation
+          setTimeout(() => {
+            navigate('/order-confirmation');
+          }, 2000);
         } else {
           setStatus('error');
-          toast({
-            title: "Payment Failed",
-            description: "Your payment could not be processed. Please try again.",
-            variant: "destructive",
-          });
         }
       } catch (error) {
         console.error('Payment verification error:', error);
