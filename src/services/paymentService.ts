@@ -60,8 +60,15 @@ export const createRazorpayOrder = async (amount: number, receipt: string): Prom
 
 export const initializeRazorpay = () => {
   return new Promise((resolve) => {
+    // Check if Razorpay SDK is already loaded
+    if ((window as any).Razorpay) {
+      resolve(true);
+      return;
+    }
+    
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
     script.onload = () => {
       resolve(true);
     };
@@ -95,22 +102,28 @@ export const openRazorpayCheckout = async (
   onSuccess: (response: any) => void,
   onError: (error: any) => void
 ) => {
-  const isLoaded = await initializeRazorpay();
-  
-  if (!isLoaded) {
-    onError(new Error('Razorpay SDK failed to load. Check your internet connection.'));
-    return;
+  try {
+    const isLoaded = await initializeRazorpay();
+    
+    if (!isLoaded) {
+      onError(new Error('Razorpay SDK failed to load. Check your internet connection.'));
+      return;
+    }
+    
+    const paymentObject = new (window as any).Razorpay({
+      ...options,
+      handler: function (response: any) {
+        onSuccess(response);
+      },
+    });
+    
+    paymentObject.on('payment.failed', function (response: any) {
+      onError(response.error || { description: 'Payment failed' });
+    });
+    
+    paymentObject.open();
+  } catch (error) {
+    console.error('Error opening Razorpay checkout:', error);
+    onError(error || new Error('Failed to open payment gateway'));
   }
-  
-  const paymentObject = new (window as any).Razorpay(options);
-  
-  paymentObject.on('payment.success', function (response: any) {
-    onSuccess(response);
-  });
-  
-  paymentObject.on('payment.error', function (response: any) {
-    onError(response.error);
-  });
-  
-  paymentObject.open();
 };

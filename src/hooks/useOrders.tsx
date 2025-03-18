@@ -43,8 +43,11 @@ export const useOrders = () => {
         shippingCost: orderDetails.shippingCost,
         grandTotal: orderDetails.grandTotal,
       }));
+      
+      // Store payment method for later reference
+      localStorage.setItem('paymentMethod', orderDetails.paymentMethod);
 
-      // Create payment transaction for Razorpay
+      // Create payment transaction for tracking
       let paymentId = null;
       if (user) {
         try {
@@ -133,7 +136,6 @@ export const useOrders = () => {
       } else {
         // For COD, go directly to confirmation
         localStorage.setItem('orderConfirmed', 'true');
-        localStorage.setItem('paymentMethod', 'cod');
         clearCart();
         navigate('/order-confirmation');
       }
@@ -197,7 +199,6 @@ export const useOrders = () => {
           // Payment successful
           localStorage.setItem('razorpayResponse', JSON.stringify(response));
           localStorage.setItem('orderConfirmed', 'true');
-          localStorage.setItem('paymentMethod', 'razorpay');
           clearCart();
           
           // Update payment status
@@ -209,14 +210,16 @@ export const useOrders = () => {
         (error) => {
           // Payment failed
           console.error('Razorpay payment failed:', error);
+          
+          // Show a more detailed error message
           toast({
             title: "Payment Failed",
             description: error.description || "Your payment could not be processed. Please try again.",
             variant: "destructive",
           });
           
-          // Navigate back to checkout
-          navigate('/checkout');
+          // Navigate to payment callback with error
+          navigate('/payment-callback?status=failed');
         }
       );
     } catch (error: any) {
@@ -227,8 +230,8 @@ export const useOrders = () => {
         variant: "destructive",
       });
       
-      // Navigate back to checkout
-      navigate('/checkout');
+      // Navigate to payment callback with error
+      navigate('/payment-callback?status=failed');
     }
   };
 
