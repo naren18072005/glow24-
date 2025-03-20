@@ -13,7 +13,7 @@ export interface CheckoutFormValues {
   city: string;
   state: string;
   pincode: string;
-  paymentMethod: 'razorpay' | 'qr' | 'cod';
+  paymentMethod: 'razorpay' | 'qr' | 'cod' | 'gpay';
 }
 
 export const useCheckoutForm = () => {
