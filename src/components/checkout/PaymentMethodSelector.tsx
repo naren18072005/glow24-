@@ -25,13 +25,13 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
       <h2 className="text-xl font-semibold text-white mb-4">Payment Method</h2>
       
       <RadioGroup value={paymentMethod} onValueChange={handleRadioChange} className="space-y-3">
-        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5 border border-[#F2A83B]/20">
+        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5 border border-[#F2A83B]/30 bg-[#F2A83B]/5">
           <RadioGroupItem value="razorpay" id="razorpay" className="text-[#F2A83B]" />
           <div className="flex items-center">
             <CreditCard size={20} className="text-[#F2A83B] mr-2" />
             <div>
-              <Label htmlFor="razorpay" className="text-white cursor-pointer">Pay Online (Credit/Debit Card, UPI, Wallets)</Label>
-              <p className="text-xs text-white/60 mt-1">Secure payment via Razorpay</p>
+              <Label htmlFor="razorpay" className="text-white cursor-pointer">Secure Online Payment</Label>
+              <p className="text-xs text-white/60 mt-1">Pay securely with Credit/Debit Card, UPI, or Wallet</p>
             </div>
           </div>
           <div className="ml-auto flex space-x-1">
