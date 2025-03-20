@@ -5,7 +5,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/hooks/useCart';
-import { createRazorpayOrder, openRazorpayCheckout } from '@/services/paymentService';
+import { 
+  createRazorpayOrder, 
+  openRazorpayCheckout, 
+  getRazorpayKey 
+} from '@/services/paymentService';
 
 export const useOrders = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -174,10 +178,19 @@ export const useOrders = () => {
         throw new Error('Failed to create Razorpay order');
       }
       
+      // Get Razorpay key
+      const razorpayKey = getRazorpayKey();
+      
+      // Show toast notification
+      toast({
+        title: "Redirecting to Payment",
+        description: "Please complete your payment in the Razorpay window.",
+      });
+      
       // Open Razorpay checkout
       await openRazorpayCheckout(
         {
-          key: 'rzp_test_YourTestKeyHere', // Replace with your Razorpay test key
+          key: razorpayKey,
           amount: amount * 100, // in paise
           currency: 'INR',
           name: 'Glow24 Organics',
@@ -197,12 +210,19 @@ export const useOrders = () => {
         },
         (response) => {
           // Payment successful
+          console.log('Payment successful', response);
           localStorage.setItem('razorpayResponse', JSON.stringify(response));
           localStorage.setItem('orderConfirmed', 'true');
           clearCart();
           
           // Update payment status
           updateOrderStatus(orderId, 'paid');
+          
+          // Show success toast
+          toast({
+            title: "Payment Successful!",
+            description: "Your order has been placed. Thank you for shopping with us!",
+          });
           
           // Navigate to confirmation page
           navigate('/order-confirmation');

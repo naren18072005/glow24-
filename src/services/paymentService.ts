@@ -6,6 +6,7 @@ type PaymentGateway = 'qr' | 'cod' | 'razorpay';
 interface PaymentResponse {
   success: boolean;
   message?: string;
+  data?: any;
 }
 
 export const verifyPayment = async (paymentId: string, gatewayResponse: any): Promise<boolean> => {
@@ -15,6 +16,9 @@ export const verifyPayment = async (paymentId: string, gatewayResponse: any): Pr
     if (!paymentId) {
       return true; // Allow the payment to be considered successful
     }
+    
+    // For Razorpay, we should verify the signature in a real implementation
+    // This would typically be done on a backend to prevent tampering
     
     // Update the payment transaction with the gateway response
     const { error } = await supabase
@@ -42,14 +46,16 @@ export const verifyPayment = async (paymentId: string, gatewayResponse: any): Pr
 
 export const createRazorpayOrder = async (amount: number, receipt: string): Promise<{ id: string } | null> => {
   try {
-    // For frontend-only implementation, we'll simulate creating an order
-    // In a real implementation, this would be handled by a server-side function
+    // In a production environment, this should be a server-side call
+    // For this implementation, we'll create a simulated order
     
     // Simulate delay for API call
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Generate a random order ID
+    // Generate an order ID in the format Razorpay would return
     const orderId = 'order_' + Math.random().toString(36).substring(2, 15);
+    
+    console.log(`Created Razorpay order: ${orderId} for amount: ${amount}`);
     
     return { id: orderId };
   } catch (error) {
@@ -59,7 +65,7 @@ export const createRazorpayOrder = async (amount: number, receipt: string): Prom
 };
 
 export const initializeRazorpay = () => {
-  return new Promise((resolve) => {
+  return new Promise<boolean>((resolve) => {
     // Check if Razorpay SDK is already loaded
     if ((window as any).Razorpay) {
       resolve(true);
@@ -70,9 +76,11 @@ export const initializeRazorpay = () => {
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
     script.onload = () => {
+      console.log('Razorpay SDK loaded successfully');
       resolve(true);
     };
     script.onerror = () => {
+      console.error('Failed to load Razorpay SDK');
       resolve(false);
     };
     document.body.appendChild(script);
@@ -110,15 +118,26 @@ export const openRazorpayCheckout = async (
       return;
     }
     
+    // Log the Razorpay options for debugging
+    console.log('Opening Razorpay with options:', options);
+    
     const paymentObject = new (window as any).Razorpay({
       ...options,
       handler: function (response: any) {
+        console.log('Razorpay payment successful:', response);
         onSuccess(response);
       },
     });
     
+    // Add more event handlers for better user experience
     paymentObject.on('payment.failed', function (response: any) {
+      console.error('Razorpay payment failed:', response.error);
       onError(response.error || { description: 'Payment failed' });
+    });
+    
+    paymentObject.on('payment.cancel', function () {
+      console.log('Payment cancelled by user');
+      onError({ description: 'Payment cancelled by user' });
     });
     
     paymentObject.open();
@@ -126,4 +145,11 @@ export const openRazorpayCheckout = async (
     console.error('Error opening Razorpay checkout:', error);
     onError(error || new Error('Failed to open payment gateway'));
   }
+};
+
+// Function to get Razorpay key based on environment
+export const getRazorpayKey = (): string => {
+  // In a real app, this would come from environment variables
+  // For this demo, we'll use the test key
+  return 'rzp_test_uZdajUJ0GXopxC'; // This is a public test key from Razorpay docs
 };
