@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,7 +15,7 @@ export const useOrders = () => {
 
   const createOrder = async (orderDetails: {
     shippingAddress: string;
-    paymentMethod: 'gpay' | 'qr' | 'cod';
+    paymentMethod: 'gpay' | 'cod';
     shippingCost: number;
     grandTotal: number;
     customerName?: string;
@@ -154,9 +153,6 @@ export const useOrders = () => {
             phone: orderDetails.customerPhone || '',
           }
         );
-      } else if (orderDetails.paymentMethod === 'qr') {
-        // For QR payment, redirect to QR page
-        navigate('/payment');
       }
 
       return { id: orderId };

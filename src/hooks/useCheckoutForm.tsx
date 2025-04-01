@@ -13,7 +13,7 @@ export interface CheckoutFormValues {
   city: string;
   state: string;
   pincode: string;
-  paymentMethod: 'gpay' | 'qr' | 'cod';
+  paymentMethod: 'gpay' | 'cod';
 }
 
 export const useCheckoutForm = () => {

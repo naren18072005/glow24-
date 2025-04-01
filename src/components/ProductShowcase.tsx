@@ -54,19 +54,7 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
 };
 
 const ProductShowcase = () => {
-  const [category, setCategory] = useState<'hairCare' | 'skinCare'>('hairCare');
-  const [animateProducts, setAnimateProducts] = useState(true);
-
-  useEffect(() => {
-    // Temporarily disable animations when switching categories
-    setAnimateProducts(false);
-    
-    const timer = setTimeout(() => {
-      setAnimateProducts(true);
-    }, 50);
-    
-    return () => clearTimeout(timer);
-  }, [category]);
+  const [animateProducts] = useState(true);
 
   return (
     <section id="products" className="section-padding bg-gradient-to-b from-black/95 to-black">
@@ -82,49 +70,54 @@ const ProductShowcase = () => {
           </p>
         </div>
         
-        <div className="flex flex-wrap justify-center gap-6 mb-12">
-          <button 
-            className={`px-6 py-3 text-white rounded-full transition-all duration-300 ${
-              category === 'hairCare' 
-                ? 'bg-[#F2A83B] shadow-lg shadow-[#F2A83B]/30' 
-                : 'bg-dark-light hover:bg-dark-lighter'
-            }`}
-            onClick={() => setCategory('hairCare')}
-          >
-            Hair Care Products
-          </button>
-          <button 
-            className={`px-6 py-3 text-white rounded-full transition-all duration-300 ${
-              category === 'skinCare' 
-                ? 'bg-[#F2A83B] shadow-lg shadow-[#F2A83B]/30' 
-                : 'bg-dark-light hover:bg-dark-lighter'
-            }`}
-            onClick={() => setCategory('skinCare')}
-          >
-            Skin & Lip Care Products
-          </button>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {productData[category].map((product, index) => (
-            <div 
-              key={product.id}
-              className={animateProducts ? 'animate-scale-in' : ''}
-              style={{ animationDelay: `${index * 100}ms` }}
+        {/* Hair Care Products */}
+        <div className="mb-16">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">Hair Care Products</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {productData.hairCare.map((product, index) => (
+              <div 
+                key={product.id}
+                className={animateProducts ? 'animate-scale-in' : ''}
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-6">
+            <Link 
+              to="/hair-care"
+              className="text-[#F2A83B] hover:underline inline-flex items-center"
             >
-              <ProductCard product={product} />
-            </div>
-          ))}
+              View All Hair Care Products
+            </Link>
+          </div>
         </div>
         
-        <div className="text-center mt-10">
-          <Link 
-            to={category === 'hairCare' ? "/hair-care" : "/skin-care"}
-            className="px-6 py-3 bg-[#F2A83B] text-black rounded-md hover:bg-[#F2A83B]/90 transition-colors inline-flex items-center"
-          >
-            View All {category === 'hairCare' ? 'Hair Care' : 'Skin Care'} Products
-          </Link>
+        {/* Skin Care Products */}
+        <div>
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">Skin & Lip Care Products</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {productData.skinCare.map((product, index) => (
+              <div 
+                key={product.id}
+                className={animateProducts ? 'animate-scale-in' : ''}
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-6">
+            <Link 
+              to="/skin-care"
+              className="text-[#F2A83B] hover:underline inline-flex items-center"
+            >
+              View All Skin Care Products
+            </Link>
+          </div>
         </div>
+        
       </div>
     </section>
   );

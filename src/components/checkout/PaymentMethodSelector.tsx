@@ -2,10 +2,10 @@
 import React from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, QrCode, Wallet, Truck } from 'lucide-react';
+import { Wallet, Truck } from 'lucide-react';
 
 interface PaymentMethodSelectorProps {
-  paymentMethod: 'gpay' | 'qr' | 'cod';
+  paymentMethod: 'gpay' | 'cod';
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 }
 
@@ -36,17 +36,6 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
           </div>
           <div className="ml-auto">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1024px-Google_Pay_Logo_%282020%29.svg.png" alt="Google Pay" className="h-8" />
-          </div>
-        </div>
-        
-        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5">
-          <RadioGroupItem value="qr" id="qr" className="text-[#F2A83B]" />
-          <div className="flex items-center">
-            <QrCode size={20} className="text-[#F2A83B] mr-2" />
-            <div>
-              <Label htmlFor="qr" className="text-white cursor-pointer">Pay via QR Code (UPI/Google Pay/PhonePe)</Label>
-              <p className="text-xs text-white/60 mt-1">Scan and pay with any UPI app</p>
-            </div>
           </div>
         </div>
         
