@@ -24,17 +24,10 @@ const Hero = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       <div 
-        className="absolute inset-0 bg-black opacity-90 z-0"
+        className="absolute inset-0 bg-black/90 opacity-90 z-0"
         ref={heroRef}
       >
-        <div className="absolute inset-0 flex items-center justify-center opacity-20">
-          <img 
-            src="/lovable-uploads/de4d0e6f-1626-4aee-ace1-fe33a44d010e.png" 
-            alt="Glow24 Logo Background" 
-            className="w-full h-full object-contain animate-pulse"
-            style={{ animation: 'pulse 4s infinite' }}
-          />
-        </div>
+        {/* We've removed the logo here since it's now in the global background */}
       </div>
       
       <div className="absolute inset-0 bg-black/40 z-10"></div>

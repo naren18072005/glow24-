@@ -78,6 +78,12 @@
   
   body {
     @apply bg-black text-white font-sans;
+    background-image: url('/lovable-uploads/2895600e-410c-45ec-8e13-f615915bb7bd.png');
+    background-position: center;
+    background-attachment: fixed;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -128,6 +134,16 @@
   
   .full-width {
     @apply w-full max-w-[1800px] mx-auto;
+  }
+  
+  /* Background overlay for sections */
+  .section-with-bg-overlay {
+    @apply relative z-10;
+  }
+  
+  .section-with-bg-overlay::before {
+    content: '';
+    @apply absolute inset-0 bg-black/75 z-[-1];
   }
   
   /* Add new animations */
