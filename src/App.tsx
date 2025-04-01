@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import Checkout from "./pages/Checkout";
 import Payment from "./pages/Payment";
 import PaymentCallback from "./pages/PaymentCallback";
+import PaymentRedirect from "./pages/PaymentRedirect";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Cart from "./components/Cart";
 import HairCare from "./pages/HairCare";
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/payment" element={<Payment />} />
               <Route path="/payment/callback" element={<PaymentCallback />} />
+              <Route path="/payment/redirect" element={<PaymentRedirect />} />
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/account" element={<Account />} />

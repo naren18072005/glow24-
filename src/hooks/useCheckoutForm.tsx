@@ -30,7 +30,7 @@ export const useCheckoutForm = () => {
     city: '',
     state: '',
     pincode: '',
-    paymentMethod: 'razorpay', // Default to Razorpay payment
+    paymentMethod: 'gpay', // Default to GPay payment
   });
   
   const [isCoimbatore, setIsCoimbatore] = useState(false);

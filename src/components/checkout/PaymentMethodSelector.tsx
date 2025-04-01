@@ -25,6 +25,20 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
       <h2 className="text-xl font-semibold text-white mb-4">Payment Method</h2>
       
       <RadioGroup value={paymentMethod} onValueChange={handleRadioChange} className="space-y-3">
+        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5 border border-green-500/30 bg-green-500/5">
+          <RadioGroupItem value="gpay" id="gpay" className="text-green-500" />
+          <div className="flex items-center">
+            <Wallet size={20} className="text-green-500 mr-2" />
+            <div>
+              <Label htmlFor="gpay" className="text-white cursor-pointer">Google Pay (GPay)</Label>
+              <p className="text-xs text-white/60 mt-1">Fast and secure payment with Google Pay</p>
+            </div>
+          </div>
+          <div className="ml-auto">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1024px-Google_Pay_Logo_%282020%29.svg.png" alt="Google Pay" className="h-8" />
+          </div>
+        </div>
+
         <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5 border border-[#F2A83B]/30 bg-[#F2A83B]/5">
           <RadioGroupItem value="razorpay" id="razorpay" className="text-[#F2A83B]" />
           <div className="flex items-center">
@@ -38,20 +52,6 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
             <img src="https://cdn.razorpay.com/static/assets/logo/cards/visa.svg" alt="Visa" className="h-6" />
             <img src="https://cdn.razorpay.com/static/assets/logo/cards/mastercard.svg" alt="Mastercard" className="h-6" />
             <img src="https://cdn.razorpay.com/static/assets/logo/cards/rupay.svg" alt="RuPay" className="h-6" />
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5 border border-green-500/30 bg-green-500/5">
-          <RadioGroupItem value="gpay" id="gpay" className="text-green-500" />
-          <div className="flex items-center">
-            <Wallet size={20} className="text-green-500 mr-2" />
-            <div>
-              <Label htmlFor="gpay" className="text-white cursor-pointer">Google Pay (GPay)</Label>
-              <p className="text-xs text-white/60 mt-1">Pay directly with Google Pay</p>
-            </div>
-          </div>
-          <div className="ml-auto">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1024px-Google_Pay_Logo_%282020%29.svg.png" alt="Google Pay" className="h-8" />
           </div>
         </div>
         

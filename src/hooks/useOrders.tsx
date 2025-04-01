@@ -9,6 +9,7 @@ import {
   openRazorpayCheckout, 
   getRazorpayKey 
 } from '@/services/paymentService';
+import { handleGooglePayCheckout } from '@/services/googlePayService';
 
 export const useOrders = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -54,6 +55,7 @@ export const useOrders = () => {
       let paymentId = null;
       if (user) {
         try {
+          // Create payment transaction for tracking
           const { data: transaction, error } = await supabase
             .from('payment_transactions')
             .insert({
@@ -134,15 +136,20 @@ export const useOrders = () => {
           }
         );
       } else if (orderDetails.paymentMethod === 'gpay') {
-        // Redirect to Google Pay
-        handleGPayRedirect(
+        // Show toast notification
+        toast({
+          title: "Redirecting to Google Pay",
+          description: "You will be redirected to complete your payment with Google Pay.",
+        });
+        
+        // Handle Google Pay payment
+        await handleGooglePayCheckout(
           orderId,
           orderDetails.grandTotal,
           {
             name: orderDetails.customerName || 'Customer',
             email: orderDetails.customerEmail || '',
             phone: orderDetails.customerPhone || '',
-            address: orderDetails.shippingAddress
           }
         );
       } else if (orderDetails.paymentMethod === 'qr') {
@@ -165,67 +172,6 @@ export const useOrders = () => {
       return null;
     } finally {
       setIsCreating(false);
-    }
-  };
-
-  const handleGPayRedirect = async (
-    orderId: string,
-    amount: number,
-    customerInfo: {
-      name: string;
-      email: string;
-      phone: string;
-      address: string;
-    }
-  ) => {
-    try {
-      // Show toast notification
-      toast({
-        title: "Redirecting to Google Pay",
-        description: "You will be redirected to complete your payment with Google Pay.",
-      });
-      
-      // Simulate creating a Google Pay intent
-      const merchantId = "GLOW24_MERCHANT";
-      const merchantName = "Glow24 Organics";
-      const transactionId = "gpay_" + orderId;
-      
-      // Format the amount to have two decimal places
-      const formattedAmount = amount.toFixed(2);
-      
-      // For demo purposes, we redirect to Google Pay's simulated payment page
-      // In a real implementation, this would use the Google Pay API
-      const gPayURL = `https://pay.google.com/gp/v/u/0/home?hdr=0&origin=https://lovableproject.com#checkout?transactionId=${transactionId}&merchantId=${merchantId}&merchantName=${merchantName}&totalPrice=${formattedAmount}`;
-      
-      // Store intention to redirect in localStorage
-      localStorage.setItem('gPayRedirect', 'true');
-      localStorage.setItem('orderConfirmed', 'true');
-      
-      // For demo purposes, simulate success and go to confirmation
-      // In a real app, this would redirect to Google Pay
-      setTimeout(() => {
-        clearCart();
-        navigate('/order-confirmation');
-      }, 1500);
-      
-      // Open Google Pay in a new window (will likely be blocked by popup blockers)
-      // This is just for visual effect in our demo
-      const gPayWindow = window.open(gPayURL, '_blank');
-      // If popup is blocked, handle gracefully
-      if (!gPayWindow) {
-        console.log('Popup blocked, redirecting to confirmation page');
-      }
-    } catch (error: any) {
-      console.error('Google Pay redirect error:', error);
-      // For demo purposes, still redirect to success
-      toast({
-        title: "Payment Successful!",
-        description: "Your Google Pay payment has been processed successfully.",
-      });
-      
-      localStorage.setItem('orderConfirmed', 'true');
-      clearCart();
-      navigate('/order-confirmation');
     }
   };
 
