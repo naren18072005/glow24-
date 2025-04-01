@@ -1,15 +1,11 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/hooks/useCart';
-import { 
-  createRazorpayOrder, 
-  openRazorpayCheckout, 
-  getRazorpayKey 
-} from '@/services/paymentService';
-import { handleGooglePayCheckout } from '@/services/googlePayService';
+import { handleGooglePayCheckout, handleBlueDartCOD } from '@/services/googlePayService';
 
 export const useOrders = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -20,7 +16,7 @@ export const useOrders = () => {
 
   const createOrder = async (orderDetails: {
     shippingAddress: string;
-    paymentMethod: 'razorpay' | 'qr' | 'cod' | 'gpay';
+    paymentMethod: 'gpay' | 'qr' | 'cod';
     shippingCost: number;
     grandTotal: number;
     customerName?: string;
@@ -124,25 +120,14 @@ export const useOrders = () => {
       }
 
       // Handle payment based on selected method
-      if (orderDetails.paymentMethod === 'razorpay') {
-        handleRazorpayPayment(
-          orderId,
-          orderDetails.grandTotal,
-          {
-            name: orderDetails.customerName || 'Customer',
-            email: orderDetails.customerEmail || '',
-            phone: orderDetails.customerPhone || '',
-            address: orderDetails.shippingAddress
-          }
-        );
-      } else if (orderDetails.paymentMethod === 'gpay') {
+      if (orderDetails.paymentMethod === 'gpay') {
         // Show toast notification
         toast({
           title: "Redirecting to Google Pay",
           description: "You will be redirected to complete your payment with Google Pay.",
         });
         
-        // Handle Google Pay payment
+        // Handle Google Pay payment with the exact amount
         await handleGooglePayCheckout(
           orderId,
           orderDetails.grandTotal,
@@ -152,14 +137,26 @@ export const useOrders = () => {
             phone: orderDetails.customerPhone || '',
           }
         );
+      } else if (orderDetails.paymentMethod === 'cod') {
+        // Show toast notification for Blue Dart COD
+        toast({
+          title: "Processing Cash on Delivery",
+          description: "Your order is being registered with Blue Dart for Cash on Delivery.",
+        });
+        
+        // Handle Blue Dart COD integration
+        await handleBlueDartCOD(
+          orderId,
+          orderDetails.shippingAddress,
+          {
+            name: orderDetails.customerName || 'Customer',
+            email: orderDetails.customerEmail || '',
+            phone: orderDetails.customerPhone || '',
+          }
+        );
       } else if (orderDetails.paymentMethod === 'qr') {
         // For QR payment, redirect to QR page
         navigate('/payment');
-      } else {
-        // For COD, go directly to confirmation
-        localStorage.setItem('orderConfirmed', 'true');
-        clearCart();
-        navigate('/order-confirmation');
       }
 
       return { id: orderId };
@@ -172,104 +169,6 @@ export const useOrders = () => {
       return null;
     } finally {
       setIsCreating(false);
-    }
-  };
-
-  const handleRazorpayPayment = async (
-    orderId: string,
-    amount: number,
-    customerInfo: {
-      name: string;
-      email: string;
-      phone: string;
-      address: string;
-    }
-  ) => {
-    try {
-      // Create order in Razorpay
-      const razorpayOrder = await createRazorpayOrder(
-        amount * 100, // Razorpay accepts amount in paise
-        orderId
-      );
-      
-      if (!razorpayOrder) {
-        throw new Error('Failed to create Razorpay order');
-      }
-      
-      // Get Razorpay key
-      const razorpayKey = getRazorpayKey();
-      
-      // Show toast notification
-      toast({
-        title: "Redirecting to Payment",
-        description: "Please complete your payment in the Razorpay window.",
-      });
-      
-      // Open Razorpay checkout
-      await openRazorpayCheckout(
-        {
-          key: razorpayKey,
-          amount: amount * 100, // in paise
-          currency: 'INR',
-          name: 'Glow24 Organics',
-          description: 'Order #' + orderId.substring(0, 8),
-          order_id: razorpayOrder.id,
-          prefill: {
-            name: customerInfo.name,
-            email: customerInfo.email,
-            contact: customerInfo.phone
-          },
-          notes: {
-            address: customerInfo.address
-          },
-          theme: {
-            color: '#F2A83B'
-          }
-        },
-        (response) => {
-          // Payment successful
-          console.log('Payment successful', response);
-          localStorage.setItem('razorpayResponse', JSON.stringify(response));
-          localStorage.setItem('orderConfirmed', 'true');
-          clearCart();
-          
-          // Update payment status
-          updateOrderStatus(orderId, 'paid');
-          
-          // Show success toast
-          toast({
-            title: "Payment Successful!",
-            description: "Your order has been placed. Thank you for shopping with us!",
-          });
-          
-          // Navigate to confirmation page
-          navigate('/order-confirmation');
-        },
-        (error) => {
-          // Payment failed
-          console.error('Razorpay payment failed:', error);
-          
-          // Show a more detailed error message
-          toast({
-            title: "Payment Failed",
-            description: error.description || "Your payment could not be processed. Please try again.",
-            variant: "destructive",
-          });
-          
-          // Navigate to payment callback with error
-          navigate('/payment-callback?status=failed');
-        }
-      );
-    } catch (error: any) {
-      console.error('Razorpay error:', error);
-      toast({
-        title: "Payment Error",
-        description: error.message || "There was a problem processing your payment. Please try again.",
-        variant: "destructive",
-      });
-      
-      // Navigate to payment callback with error
-      navigate('/payment-callback?status=failed');
     }
   };
 

@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useCart } from '@/hooks/useCart';
@@ -9,8 +9,15 @@ const PaymentRedirect = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { clearCart } = useCart();
+  const [paymentMethod, setPaymentMethod] = useState<'gpay' | 'qr' | 'cod'>('gpay');
 
   useEffect(() => {
+    // Get payment method from localStorage
+    const storedMethod = localStorage.getItem('paymentMethod') as 'gpay' | 'qr' | 'cod';
+    if (storedMethod) {
+      setPaymentMethod(storedMethod);
+    }
+
     // Simulate payment verification
     const timer = setTimeout(() => {
       // Mark order as confirmed
@@ -18,29 +25,49 @@ const PaymentRedirect = () => {
       // Clear cart
       clearCart();
       
-      // Show success toast
-      toast({
-        title: "Payment Successful!",
-        description: "Your payment has been processed successfully. Redirecting to order confirmation.",
-      });
+      // Show success toast based on payment method
+      if (paymentMethod === 'gpay') {
+        toast({
+          title: "Google Pay Payment Successful!",
+          description: "Your payment has been processed through Google Pay. Redirecting to order confirmation.",
+        });
+      } else if (paymentMethod === 'cod') {
+        toast({
+          title: "Order Confirmed for Blue Dart Delivery!",
+          description: "Your order has been confirmed for Cash on Delivery via Blue Dart. Redirecting to order confirmation.",
+        });
+      } else {
+        toast({
+          title: "Payment Successful!",
+          description: "Your payment has been processed successfully. Redirecting to order confirmation.",
+        });
+      }
       
       // Redirect to order confirmation
       navigate('/order-confirmation');
     }, 2000);
     
     return () => clearTimeout(timer);
-  }, [navigate, toast, clearCart]);
+  }, [navigate, toast, clearCart, paymentMethod]);
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="bg-white/5 rounded-lg p-8 border border-white/10 max-w-md w-full text-center">
         <h1 className="text-2xl font-bold text-white mb-6">
-          Returning from Payment Gateway
+          {paymentMethod === 'gpay' && 'Processing Google Pay Payment'}
+          {paymentMethod === 'cod' && 'Confirming Blue Dart Delivery'}
+          {paymentMethod === 'qr' && 'Verifying QR Payment'}
         </h1>
         
         <div className="flex flex-col items-center justify-center py-8">
-          <LoaderCircle size={48} className="text-green-500 animate-spin mb-4" />
-          <p className="text-white/80">Verifying your payment...</p>
+          <LoaderCircle size={48} 
+            className={`animate-spin mb-4 ${paymentMethod === 'gpay' ? 'text-green-500' : paymentMethod === 'cod' ? 'text-blue-500' : 'text-[#F2A83B]'}`} 
+          />
+          <p className="text-white/80">
+            {paymentMethod === 'gpay' && 'Processing your Google Pay transaction...'}
+            {paymentMethod === 'cod' && 'Confirming your Blue Dart delivery details...'}
+            {paymentMethod === 'qr' && 'Verifying your payment...'}
+          </p>
           <p className="text-white/60 text-sm mt-2">Please do not close this window</p>
         </div>
       </div>
