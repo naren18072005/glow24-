@@ -25,32 +25,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    });
+    const fetchInitialSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          await fetchUserProfile(session.user.id);
+        }
+      } catch (error) {
+        console.error("Error fetching initial session:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInitialSession();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        setIsLoading(false);
 
         if (session?.user) {
-          // Fetch user profile when authenticated
-          const { data, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-
-          if (error) {
-            console.error('Error fetching profile:', error);
-          } else {
-            setProfile(data);
-          }
+          await fetchUserProfile(session.user.id);
         } else {
           setProfile(null);
         }
@@ -62,63 +62,118 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
 
-    if (error) {
+      if (error) {
+        console.error('Error fetching profile:', error);
+      } else {
+        setProfile(data);
+      }
+    } catch (error) {
+      console.error('Exception when fetching profile:', error);
+    }
+  };
+
+  const signIn = async (email: string, password: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        toast({
+          title: "Authentication Error",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { error };
+      }
+
       toast({
-        title: "Authentication Error",
-        description: error.message,
+        title: "Successfully signed in",
+        description: "Welcome back!",
+      });
+
+      return { error: null };
+    } catch (error: any) {
+      console.error("Sign in exception:", error);
+      toast({
+        title: "Connection Error",
+        description: "Unable to connect to authentication service. Please try again later.",
         variant: "destructive",
       });
       return { error };
     }
-
-    toast({
-      title: "Successfully signed in",
-      description: "Welcome back!",
-    });
-
-    return { error: null };
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
         },
-      },
-    });
+      });
 
-    if (error) {
+      if (error) {
+        toast({
+          title: "Sign Up Error",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { error, data: null };
+      }
+
+      // Check if email confirmation is required
+      if (data?.user && data?.user?.identities?.length === 0) {
+        toast({
+          title: "Email confirmation required",
+          description: "Please check your email to confirm your account",
+        });
+      } else {
+        toast({
+          title: "Account created successfully",
+          description: "Welcome to Glow24 Organics!",
+        });
+      }
+
+      return { error: null, data };
+    } catch (error: any) {
+      console.error("Sign up exception:", error);
       toast({
-        title: "Sign Up Error",
-        description: error.message,
+        title: "Connection Error",
+        description: "Unable to connect to authentication service. Please try again later.",
         variant: "destructive",
       });
       return { error, data: null };
     }
-
-    toast({
-      title: "Account created successfully",
-      description: "Welcome to Glow24 Organics!",
-    });
-
-    return { error: null, data };
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    toast({
-      title: "Signed out",
-      description: "You have been successfully signed out.",
-    });
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out.",
+      });
+    } catch (error) {
+      console.error("Sign out error:", error);
+      toast({
+        title: "Error",
+        description: "There was a problem signing you out.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

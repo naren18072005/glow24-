@@ -1,51 +1,105 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
+import { 
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+// Form schemas
+const signInSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
+});
+
+const signUpSchema = z.object({
+  fullName: z.string().min(2, 'Full name must be at least 2 characters long'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
+});
+
+type SignInFormValues = z.infer<typeof signInSchema>;
+type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as any)?.from?.pathname || '/';
 
   // If user is already logged in, redirect to home page
-  if (user) {
-    navigate(from);
-    return null;
-  }
+  useEffect(() => {
+    if (user) {
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, from]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const signInForm = useForm<SignInFormValues>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const signUpForm = useForm<SignUpFormValues>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSignInSubmit = async (values: SignInFormValues) => {
     setIsLoading(true);
+    setFormError(null);
 
     try {
-      if (isSignUp) {
-        // Handle sign up
-        const { error } = await signUp(email, password, fullName);
-        if (!error) {
-          // Sign up successful
-          navigate(from);
-        }
-      } else {
-        // Handle sign in
-        const { error } = await signIn(email, password);
-        if (!error) {
-          // Sign in successful
-          navigate(from);
-        }
+      const { error } = await signIn(values.email, values.password);
+      if (error) {
+        setFormError(error.message || 'Failed to sign in. Please try again.');
       }
+    } catch (err) {
+      setFormError('An unexpected error occurred. Please try again later.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const onSignUpSubmit = async (values: SignUpFormValues) => {
+    setIsLoading(true);
+    setFormError(null);
+
+    try {
+      const { error } = await signUp(values.email, values.password, values.fullName);
+      if (error) {
+        setFormError(error.message || 'Failed to sign up. Please try again.');
+      }
+    } catch (err) {
+      setFormError('An unexpected error occurred. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const toggleFormType = () => {
+    setIsSignUp(!isSignUp);
+    setFormError(null);
   };
 
   return (
@@ -65,72 +119,160 @@ const Auth = () => {
               {isSignUp ? 'Create an Account' : 'Sign In to Your Account'}
             </h1>
             
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {isSignUp && (
-                <div className="space-y-2">
-                  <Label htmlFor="fullName" className="text-white">Full Name</Label>
-                  <Input
-                    id="fullName"
-                    placeholder="Your full name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="bg-black border-white/20"
-                    required={isSignUp}
+            {formError && (
+              <div className="bg-red-500/20 border border-red-500/50 rounded-md p-3 mb-4 text-white text-sm">
+                {formError}
+              </div>
+            )}
+            
+            {isSignUp ? (
+              <Form {...signUpForm}>
+                <form onSubmit={signUpForm.handleSubmit(onSignUpSubmit)} className="space-y-4">
+                  <FormField
+                    control={signUpForm.control}
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Full Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Your full name"
+                            className="bg-black border-white/20"
+                            disabled={isLoading}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )}
                   />
-                </div>
-              )}
-              
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-white">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="bg-black border-white/20"
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-white">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-black border-white/20"
-                  required
-                />
-              </div>
-              
+                  
+                  <FormField
+                    control={signUpForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="email"
+                            placeholder="your@email.com"
+                            className="bg-black border-white/20"
+                            disabled={isLoading}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={signUpForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="password"
+                            placeholder="••••••••"
+                            className="bg-black border-white/20"
+                            disabled={isLoading}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-3 bg-[#F2A83B] text-black rounded-md font-medium hover:bg-[#F2A83B]/90 transition-colors disabled:opacity-50 flex items-center justify-center"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 size={18} className="animate-spin mr-2" />
+                        Creating Account...
+                      </>
+                    ) : 'Create Account'}
+                  </button>
+                </form>
+              </Form>
+            ) : (
+              <Form {...signInForm}>
+                <form onSubmit={signInForm.handleSubmit(onSignInSubmit)} className="space-y-4">
+                  <FormField
+                    control={signInForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="email"
+                            placeholder="your@email.com"
+                            className="bg-black border-white/20"
+                            disabled={isLoading}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={signInForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="password"
+                            placeholder="••••••••"
+                            className="bg-black border-white/20"
+                            disabled={isLoading}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-3 bg-[#F2A83B] text-black rounded-md font-medium hover:bg-[#F2A83B]/90 transition-colors disabled:opacity-50 flex items-center justify-center"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 size={18} className="animate-spin mr-2" />
+                        Signing In...
+                      </>
+                    ) : 'Sign In'}
+                  </button>
+                </form>
+              </Form>
+            )}
+            
+            <p className="text-white/60 text-center mt-6">
+              {isSignUp 
+                ? 'Already have an account?' 
+                : 'Don\'t have an account?'}
               <button
-                type="submit"
+                type="button"
+                onClick={toggleFormType}
+                className="text-[#F2A83B] ml-2 hover:underline"
                 disabled={isLoading}
-                className="w-full py-3 bg-[#F2A83B] text-black rounded-md font-medium hover:bg-[#F2A83B]/90 transition-colors disabled:opacity-50"
               >
-                {isLoading 
-                  ? 'Processing...' 
-                  : isSignUp 
-                    ? 'Create Account' 
-                    : 'Sign In'}
+                {isSignUp ? 'Sign In' : 'Sign Up'}
               </button>
-              
-              <p className="text-white/60 text-center mt-4">
-                {isSignUp 
-                  ? 'Already have an account?' 
-                  : 'Don\'t have an account?'}
-                <button
-                  type="button"
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  className="text-[#F2A83B] ml-2 hover:underline"
-                >
-                  {isSignUp ? 'Sign In' : 'Sign Up'}
-                </button>
-              </p>
-            </form>
+            </p>
           </div>
         </div>
       </div>
