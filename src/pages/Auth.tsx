@@ -138,7 +138,7 @@ const Auth = () => {
                           <Input
                             {...field}
                             placeholder="Your full name"
-                            className="bg-black border-white/20"
+                            className="bg-black border-white/20 text-white"
                             disabled={isLoading}
                           />
                         </FormControl>
@@ -158,7 +158,7 @@ const Auth = () => {
                             {...field}
                             type="email"
                             placeholder="your@email.com"
-                            className="bg-black border-white/20"
+                            className="bg-black border-white/20 text-white"
                             disabled={isLoading}
                           />
                         </FormControl>
@@ -178,7 +178,7 @@ const Auth = () => {
                             {...field}
                             type="password"
                             placeholder="••••••••"
-                            className="bg-black border-white/20"
+                            className="bg-black border-white/20 text-white"
                             disabled={isLoading}
                           />
                         </FormControl>
