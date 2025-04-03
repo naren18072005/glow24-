@@ -11,9 +11,9 @@ const Footer = () => {
         <div className="flex flex-col items-center justify-center">
           <div className="mb-6">
             <img 
-              src="/lovable-uploads/de4d0e6f-1626-4aee-ace1-fe33a44d010e.png" 
+              src="/lovable-uploads/08e166cf-e063-48e7-b7dd-82bf6a86ebfc.png" 
               alt="Glow24 Organics" 
-              className="h-20 mb-2" 
+              className="h-24 mb-2" 
             />
             <p className="text-xs text-white/70 tracking-widest text-center">
               NATURAL HAIR & SKIN CARE PRODUCTS

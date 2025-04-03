@@ -20,15 +20,18 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-black/90">
-      <div className="fixed inset-0 pointer-events-none opacity-30">
-        <div className="h-full w-full flex items-center justify-center">
-          <img 
-            src="/lovable-uploads/2895600e-410c-45ec-8e13-f615915bb7bd.png" 
-            alt="Glow24 Logo Background" 
-            className="max-w-full max-h-full object-contain"
-          />
-        </div>
+      <div className="fixed inset-0 pointer-events-none bg-pattern opacity-10">
+        {/* Added repeating pattern with the logo */}
       </div>
+      
+      <div className="fixed inset-0 pointer-events-none flex items-center justify-center opacity-20">
+        <img 
+          src="/lovable-uploads/08e166cf-e063-48e7-b7dd-82bf6a86ebfc.png" 
+          alt="Glow24 Logo Background" 
+          className="max-w-md w-full"
+        />
+      </div>
+      
       <Header />
       <main className="flex-grow relative z-10">
         <Hero />

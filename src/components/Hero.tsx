@@ -24,10 +24,10 @@ const Hero = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       <div 
-        className="absolute inset-0 bg-black/90 opacity-90 z-0"
+        className="absolute inset-0 bg-black/80 opacity-90 z-0"
         ref={heroRef}
       >
-        {/* We've removed the logo here since it's now in the global background */}
+        {/* Background decorative element */}
       </div>
       
       <div className="absolute inset-0 bg-black/40 z-10"></div>
@@ -35,6 +35,12 @@ const Hero = () => {
       <div className="container mx-auto px-4 z-20">
         <div className="max-w-3xl mx-auto text-center">
           <div className="space-y-6 animate-fade-in">
+            <img
+              src="/lovable-uploads/08e166cf-e063-48e7-b7dd-82bf6a86ebfc.png"
+              alt="Glow24 Organics"
+              className="h-28 mx-auto mb-4 animate-scale-in"
+            />
+            
             <h5 className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium tracking-wider text-white/90">
               PREMIUM BEAUTY PRODUCTS
             </h5>
@@ -62,7 +68,7 @@ const Hero = () => {
               </p>
             </div>
             
-            <div className="pt-4">
+            <div className="pt-6">
               <a 
                 href="#products" 
                 className="bg-gradient-to-r from-[#F2A83B] to-[#F2A83B]/80 text-black font-medium py-3 px-8 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-[#F2A83B]/20 inline-flex items-center hover-scale"

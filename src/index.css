@@ -78,7 +78,7 @@
   
   body {
     @apply bg-black text-white font-sans;
-    background-image: url('/lovable-uploads/2895600e-410c-45ec-8e13-f615915bb7bd.png');
+    background-image: url('/lovable-uploads/08e166cf-e063-48e7-b7dd-82bf6a86ebfc.png');
     background-position: center;
     background-attachment: fixed;
     background-size: contain;
@@ -97,7 +97,7 @@
   }
   
   .brand-gradient {
-    @apply bg-gradient-to-r from-brand-dark via-brand to-brand-light;
+    @apply bg-gradient-to-r from-[#F2A83B] via-[#F2A83B] to-[#F2A83B]/80;
   }
   
   .hover-scale {
@@ -105,7 +105,7 @@
   }
   
   .nav-link {
-    @apply relative px-2 py-1 text-white/80 hover:text-white transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-brand after:transition-all after:duration-300 hover:after:w-full;
+    @apply relative px-2 py-1 text-white/80 hover:text-white transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-[#F2A83B] after:transition-all after:duration-300 hover:after:w-full;
   }
   
   .button {
@@ -113,7 +113,7 @@
   }
   
   .button-primary {
-    @apply button bg-brand hover:bg-brand-light text-white;
+    @apply button bg-[#F2A83B] hover:bg-[#F2A83B]/90 text-black;
   }
   
   .button-success {
@@ -121,7 +121,7 @@
   }
   
   .input-field {
-    @apply w-full px-4 py-3 rounded-md bg-dark-light border border-dark-lighter focus:outline-none focus:ring-2 focus:ring-brand/50 transition-all duration-300;
+    @apply w-full px-4 py-3 rounded-md bg-dark-light border border-dark-lighter focus:outline-none focus:ring-2 focus:ring-[#F2A83B]/50 transition-all duration-300;
   }
   
   .container-padding {
@@ -146,9 +146,21 @@
     @apply absolute inset-0 bg-black/75 z-[-1];
   }
   
+  /* Background pattern */
+  .bg-pattern {
+    background-image: url('/lovable-uploads/08e166cf-e063-48e7-b7dd-82bf6a86ebfc.png');
+    background-size: 150px;
+    background-repeat: repeat;
+    opacity: 0.05;
+  }
+  
   /* Add new animations */
   .animate-slide-in {
     animation: slideIn 0.3s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
   }
   
   @keyframes slideIn {
@@ -159,6 +171,33 @@
     to {
       transform: translateX(0);
       opacity: 1;
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Gold shimmer effect */
+  .gold-shimmer {
+    background: linear-gradient(90deg, #F2A83B 0%, #F2A83B 45%, #ffffff 50%, #F2A83B 55%, #F2A83B 100%);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: shimmer 2s linear infinite;
+  }
+  
+  @keyframes shimmer {
+    to {
+      background-position: 200% center;
     }
   }
 }
