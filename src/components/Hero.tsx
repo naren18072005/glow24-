@@ -1,8 +1,9 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
   
   useEffect(() => {
     const handleParallax = () => {
@@ -11,6 +12,11 @@ const Hero = () => {
       const parallaxSpeed = 0.5;
       heroRef.current.style.transform = `translateY(${scrollPosition * parallaxSpeed}px)`;
     };
+    
+    // Add staggered animation visibility
+    setTimeout(() => {
+      setIsVisible(true);
+    }, 300);
     
     window.addEventListener('scroll', handleParallax);
     return () => {
@@ -34,19 +40,21 @@ const Hero = () => {
       
       <div className="container mx-auto px-4 z-20">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="space-y-6 animate-fade-in">
-            <img
-              src="/lovable-uploads/08e166cf-e063-48e7-b7dd-82bf6a86ebfc.png"
-              alt="Glow24 Organics"
-              className="h-28 mx-auto mb-4 animate-scale-in"
-            />
+          <div className={`space-y-6 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div className="overflow-hidden rounded-full mx-auto mb-4 p-4 w-32 h-32 flex items-center justify-center border border-[#F2A83B]/20 bg-black/40 backdrop-blur-sm">
+              <img
+                src="/lovable-uploads/08e166cf-e063-48e7-b7dd-82bf6a86ebfc.png"
+                alt="Glow24 Organics"
+                className="h-24 animate-float"
+              />
+            </div>
             
             <h5 className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium tracking-wider text-white/90">
               PREMIUM BEAUTY PRODUCTS
             </h5>
             
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              Welcome to <span className="text-[#F2A83B] bg-gradient-to-r from-[#F2A83B] to-[#F2A83B]/80 bg-clip-text text-transparent">Glow24</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              Welcome to <span className="gold-shimmer font-extrabold">Glow24</span>
             </h2>
             
             <p className="text-xl md:text-2xl text-white/80 font-light">
@@ -71,7 +79,7 @@ const Hero = () => {
             <div className="pt-6">
               <a 
                 href="#products" 
-                className="bg-gradient-to-r from-[#F2A83B] to-[#F2A83B]/80 text-black font-medium py-3 px-8 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-[#F2A83B]/20 inline-flex items-center hover-scale"
+                className="bg-gradient-to-r from-[#F2A83B] to-[#F2A83B]/80 text-black font-medium py-3 px-8 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-[#F2A83B]/20 inline-flex items-center hover:scale-105 hover:translate-y-[-2px]"
               >
                 Explore Products
               </a>

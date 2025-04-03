@@ -66,6 +66,11 @@ export default {
 				success: {
 					DEFAULT: '#4CAF50',
 					light: '#81C784'
+				},
+				gold: {
+					DEFAULT: '#F2A83B',
+					light: '#F5BE68',
+					dark: '#D99020'
 				}
 			},
 			fontFamily: {
@@ -100,6 +105,14 @@ export default {
 				'scale-in': {
 					'0%': { transform: 'scale(0.95)', opacity: '0' },
 					'100%': { transform: 'scale(1)', opacity: '1' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'pulse-slow': {
+					'0%, 100%': { opacity: '0.1' },
+					'50%': { opacity: '0.2' }
 				}
 			},
 			animation: {
@@ -108,7 +121,9 @@ export default {
 				'fade-in': 'fade-in 0.6s ease-out',
 				'slide-in': 'slide-in 0.6s ease-out',
 				'slide-up': 'slide-up 0.6s ease-out',
-				'scale-in': 'scale-in 0.4s ease-out'
+				'scale-in': 'scale-in 0.4s ease-out',
+				'float': 'float 3s ease-in-out infinite',
+				'pulse-slow': 'pulse-slow 3s ease-in-out infinite'
 			}
 		}
 	},
