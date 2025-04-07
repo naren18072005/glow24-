@@ -21,11 +21,11 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
   };
 
   return (
-    <div className="bg-white/5 rounded-lg p-6 border border-white/10">
+    <div className="glass-card rounded-lg p-6 border border-white/10 transition-all duration-300 hover:border-white/20">
       <h2 className="text-xl font-semibold text-white mb-4">Payment Method</h2>
       
-      <RadioGroup value={paymentMethod} onValueChange={handleRadioChange} className="space-y-3">
-        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5 border border-green-500/30 bg-green-500/5">
+      <RadioGroup value={paymentMethod} onValueChange={handleRadioChange} className="space-y-4">
+        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/10 transition-all duration-300 border border-green-500/30 bg-green-500/5">
           <RadioGroupItem value="gpay" id="gpay" className="text-green-500" />
           <div className="flex items-center">
             <Wallet size={20} className="text-green-500 mr-2" />
@@ -39,7 +39,7 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
           </div>
         </div>
         
-        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/5 border border-blue-500/30 bg-blue-500/5">
+        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/10 transition-all duration-300 border border-blue-500/30 bg-blue-500/5">
           <RadioGroupItem value="cod" id="cod" className="text-blue-500" />
           <div className="flex items-center">
             <Truck size={20} className="text-blue-500 mr-2" />
@@ -49,7 +49,15 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
             </div>
           </div>
           <div className="ml-auto">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Blue_Dart_logo.svg/2560px-Blue_Dart_logo.svg.png" alt="Blue Dart" className="h-6" />
+            <img 
+              src="https://logowik.com/content/uploads/images/blue-dart-express4889.logowik.com.webp" 
+              alt="Blue Dart" 
+              className="h-7 object-contain" 
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Blue_Dart_logo.svg/2560px-Blue_Dart_logo.svg.png";
+              }}
+            />
           </div>
         </div>
       </RadioGroup>

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Clock, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface PaymentStatusProps {
   status: 'pending' | 'completed';
@@ -16,26 +17,46 @@ const PaymentStatus = ({ status, countdown, onConfirmPayment }: PaymentStatusPro
   };
   
   return (
-    <div className="mb-8 flex flex-col items-center">
+    <motion.div 
+      className="mb-8 flex flex-col items-center"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {status === 'pending' ? (
-        <div className="flex items-center text-amber-400 mb-4">
+        <motion.div 
+          className="flex items-center text-amber-400 mb-4"
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
           <Clock size={20} className="mr-2" />
           <p>Payment pending... {formatTime(countdown)}</p>
-        </div>
+        </motion.div>
       ) : (
-        <div className="flex items-center text-green-500 mb-4">
+        <motion.div 
+          className="flex items-center text-green-500 mb-4"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 260, 
+            damping: 20 
+          }}
+        >
           <CheckCircle size={20} className="mr-2" />
           <p>Payment completed!</p>
-        </div>
+        </motion.div>
       )}
       
-      <button
+      <motion.button
         onClick={onConfirmPayment}
-        className="py-3 px-6 bg-[#F2A83B] text-black rounded-md font-medium hover:bg-[#F2A83B]/90 transition-colors"
+        className="py-3 px-6 bg-[#F2A83B] text-black rounded-md font-medium hover:bg-[#F2A83B]/90 transition-colors shadow-lg hover:shadow-xl hover:shadow-[#F2A83B]/20 transform transition-transform duration-300"
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
       >
         I've Completed the Payment
-      </button>
-    </div>
+      </motion.button>
+    </motion.div>
   );
 };
 
