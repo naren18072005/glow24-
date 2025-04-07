@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Clock, CheckCircle } from 'lucide-react';
+import { Clock, CheckCircle, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface PaymentStatusProps {
@@ -18,23 +18,26 @@ const PaymentStatus = ({ status, countdown, onConfirmPayment }: PaymentStatusPro
   
   return (
     <motion.div 
-      className="mb-8 flex flex-col items-center"
+      className="mb-8 flex flex-col items-center space-y-6"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
       {status === 'pending' ? (
         <motion.div 
-          className="flex items-center text-amber-400 mb-4"
-          animate={{ scale: [1, 1.05, 1] }}
+          className="flex flex-col items-center"
+          animate={{ scale: [1, 1.02, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <Clock size={20} className="mr-2" />
-          <p>Payment pending... {formatTime(countdown)}</p>
+          <div className="w-16 h-16 rounded-full bg-amber-400/20 flex items-center justify-center mb-3">
+            <Clock size={24} className="text-amber-400" />
+          </div>
+          <p className="text-amber-400 font-medium text-lg">Payment pending</p>
+          <p className="text-white/60 text-sm">Expires in {formatTime(countdown)}</p>
         </motion.div>
       ) : (
         <motion.div 
-          className="flex items-center text-green-500 mb-4"
+          className="flex flex-col items-center"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ 
@@ -43,18 +46,22 @@ const PaymentStatus = ({ status, countdown, onConfirmPayment }: PaymentStatusPro
             damping: 20 
           }}
         >
-          <CheckCircle size={20} className="mr-2" />
-          <p>Payment completed!</p>
+          <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mb-3">
+            <CheckCircle size={24} className="text-green-500" />
+          </div>
+          <p className="text-green-500 font-medium text-lg">Payment completed!</p>
+          <p className="text-white/60 text-sm">Thank you for your payment</p>
         </motion.div>
       )}
       
       <motion.button
         onClick={onConfirmPayment}
-        className="py-3 px-6 bg-[#F2A83B] text-black rounded-md font-medium hover:bg-[#F2A83B]/90 transition-colors shadow-lg hover:shadow-xl hover:shadow-[#F2A83B]/20 transform transition-transform duration-300"
+        className="group py-3 px-6 bg-[#F2A83B] text-black rounded-md font-medium hover:bg-[#F2A83B]/90 transition-colors shadow-lg hover:shadow-xl hover:shadow-[#F2A83B]/20 transform transition-transform duration-300 flex items-center"
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}
       >
-        I've Completed the Payment
+        {status === 'completed' ? 'Continue to Order Confirmation' : 'I\'ve Completed the Payment'}
+        <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-1" />
       </motion.button>
     </motion.div>
   );
