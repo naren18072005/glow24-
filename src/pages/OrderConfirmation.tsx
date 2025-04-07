@@ -17,6 +17,7 @@ const OrderConfirmation = () => {
   const { clearCart } = useCart();
   const [order, setOrder] = useState<any>(null);
   const [orderNumber, setOrderNumber] = useState('');
+  const [orderId, setOrderId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'qr' | 'cod'>('qr');
   const estimatedDelivery = getEstimatedDelivery();
   
@@ -37,8 +38,9 @@ const OrderConfirmation = () => {
       const parsedOrder = JSON.parse(checkoutInfo);
       setOrder(parsedOrder);
       
-      // Use order ID if available, otherwise generate random number
+      // Store order ID if available
       if (parsedOrder.orderId) {
+        setOrderId(parsedOrder.orderId);
         // Extract last 6 characters of the order ID to use as order number
         const idStr = parsedOrder.orderId.toString();
         setOrderNumber(idStr.substring(idStr.length - 6));
@@ -94,7 +96,7 @@ const OrderConfirmation = () => {
               />
             )}
             
-            <OrderStatusTracker estimatedDeliveryDate={estimatedDelivery} />
+            <OrderStatusTracker estimatedDeliveryDate={estimatedDelivery} orderId={orderId} />
             
             <OrderFooter />
           </div>
