@@ -14,13 +14,20 @@ const Hero = () => {
     };
     
     // Add staggered animation visibility
-    setTimeout(() => {
+    const animationTimer = setTimeout(() => {
       setIsVisible(true);
     }, 300);
+    
+    // Add subtle floating animation to background
+    const heroElement = heroRef.current;
+    if (heroElement) {
+      heroElement.classList.add('animate-float-slow');
+    }
     
     window.addEventListener('scroll', handleParallax);
     return () => {
       window.removeEventListener('scroll', handleParallax);
+      clearTimeout(animationTimer);
     };
   }, []);
   
@@ -33,7 +40,8 @@ const Hero = () => {
         className="absolute inset-0 bg-black/80 opacity-90 z-0"
         ref={heroRef}
       >
-        {/* Background decorative element */}
+        {/* Background decorative element with subtle animation */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#F2A83B]/30 via-transparent to-transparent"></div>
       </div>
       
       <div className="absolute inset-0 bg-black/40 z-10"></div>
