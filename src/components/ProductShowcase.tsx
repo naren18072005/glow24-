@@ -1,9 +1,10 @@
-
 import { useEffect, useState } from 'react';
 import ProductCard, { ProductProps } from './ProductCard';
 import { Link } from 'react-router-dom';
+import { useProducts } from '@/hooks/useProducts';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
+const fallbackProductData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
   hairCare: [
     {
       id: 1,
@@ -55,6 +56,33 @@ const productData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
 
 const ProductShowcase = () => {
   const [animateProducts] = useState(true);
+  const { products, loading, error } = useProducts();
+  
+  const organizedProducts = {
+    hairCare: products.filter(p => p.category === 'hair-care' || p.id === 1 || p.id === 2),
+    skinCare: products.filter(p => p.category === 'skin-care' || p.id >= 3)
+  };
+  
+  const displayProducts = products.length > 0 ? organizedProducts : fallbackProductData;
+
+  const renderSkeletons = (count: number) => {
+    return Array(count).fill(0).map((_, index) => (
+      <div key={`skeleton-${index}`} className="animate-pulse">
+        <div className="h-[400px] bg-white/5 rounded-xl overflow-hidden">
+          <div className="w-full h-3/5 bg-white/10"></div>
+          <div className="p-6">
+            <div className="h-6 bg-white/10 rounded w-3/4 mb-4"></div>
+            <div className="h-4 bg-white/10 rounded w-full mb-2"></div>
+            <div className="h-4 bg-white/10 rounded w-4/5 mb-4"></div>
+            <div className="flex justify-between items-center mt-6">
+              <div className="h-6 bg-white/10 rounded w-1/4"></div>
+              <div className="h-10 bg-white/10 rounded w-1/3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+  };
 
   return (
     <section id="products" className="section-padding bg-gradient-to-b from-black/95 to-black">
@@ -68,21 +96,30 @@ const ProductShowcase = () => {
             Discover our carefully formulated products made with the finest organic ingredients. 
             Your skin and hair deserve nothing but the purest natural care.
           </p>
+          
+          {error && (
+            <p className="text-red-400 mt-4 text-sm">
+              {error} <button className="underline" onClick={() => window.location.reload()}>Refresh page</button>
+            </p>
+          )}
         </div>
         
-        {/* Hair Care Products */}
         <div className="mb-16">
           <h3 className="text-2xl font-bold text-white mb-6 text-center">Hair Care Products</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {productData.hairCare.map((product, index) => (
-              <div 
-                key={product.id}
-                className={animateProducts ? 'animate-scale-in' : ''}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
+            {loading ? (
+              renderSkeletons(2)
+            ) : (
+              displayProducts.hairCare.map((product, index) => (
+                <div 
+                  key={product.id}
+                  className={animateProducts ? 'animate-scale-in' : ''}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
           </div>
           <div className="text-center mt-6">
             <Link 
@@ -94,19 +131,22 @@ const ProductShowcase = () => {
           </div>
         </div>
         
-        {/* Skin Care Products */}
         <div>
           <h3 className="text-2xl font-bold text-white mb-6 text-center">Skin & Lip Care Products</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {productData.skinCare.map((product, index) => (
-              <div 
-                key={product.id}
-                className={animateProducts ? 'animate-scale-in' : ''}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
+            {loading ? (
+              renderSkeletons(4)
+            ) : (
+              displayProducts.skinCare.map((product, index) => (
+                <div 
+                  key={product.id}
+                  className={animateProducts ? 'animate-scale-in' : ''}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
           </div>
           <div className="text-center mt-6">
             <Link 
@@ -117,7 +157,6 @@ const ProductShowcase = () => {
             </Link>
           </div>
         </div>
-        
       </div>
     </section>
   );

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useCart } from '@/hooks/useCart';
+import { useOrders } from '@/hooks/useOrders';
 import OrderHeader from '@/components/order/OrderHeader';
 import OrderStatusHeader from '@/components/order/OrderStatusHeader';
 import OrderSummaryInfo from '@/components/order/OrderSummaryInfo';
@@ -15,10 +16,12 @@ const OrderConfirmation = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { clearCart } = useCart();
+  const { getTrackingInfo } = useOrders();
   const [order, setOrder] = useState<any>(null);
   const [orderNumber, setOrderNumber] = useState('');
   const [orderId, setOrderId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'qr' | 'cod'>('qr');
+  const [trackingData, setTrackingData] = useState<any>(null);
   const estimatedDelivery = getEstimatedDelivery();
   
   useEffect(() => {
@@ -44,6 +47,13 @@ const OrderConfirmation = () => {
         // Extract last 6 characters of the order ID to use as order number
         const idStr = parsedOrder.orderId.toString();
         setOrderNumber(idStr.substring(idStr.length - 6));
+        
+        // Fetch tracking info for this order
+        getTrackingInfo(parsedOrder.orderId).then(data => {
+          if (data) {
+            setTrackingData(data);
+          }
+        });
       } else {
         const randomOrderNumber = Math.floor(100000 + Math.random() * 900000).toString();
         setOrderNumber(randomOrderNumber);
@@ -70,7 +80,7 @@ const OrderConfirmation = () => {
       localStorage.removeItem('cartTotal');
       localStorage.removeItem('paymentMethod');
     };
-  }, [navigate, toast, clearCart]);
+  }, [navigate, toast, clearCart, getTrackingInfo]);
   
   return (
     <div className="min-h-screen bg-black">
@@ -84,7 +94,7 @@ const OrderConfirmation = () => {
             <OrderSummaryInfo 
               orderNumber={orderNumber}
               paymentMethod={paymentMethod}
-              estimatedDelivery={estimatedDelivery}
+              estimatedDelivery={trackingData?.estimatedDelivery || estimatedDelivery}
             />
             
             {order && (
@@ -96,7 +106,11 @@ const OrderConfirmation = () => {
               />
             )}
             
-            <OrderStatusTracker estimatedDeliveryDate={estimatedDelivery} orderId={orderId} />
+            <OrderStatusTracker 
+              estimatedDeliveryDate={trackingData?.estimatedDelivery || estimatedDelivery} 
+              orderId={orderId}
+              trackingData={trackingData}
+            />
             
             <OrderFooter />
           </div>

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { ShoppingCart, Heart } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -11,6 +10,7 @@ export interface ProductProps {
   price: number;
   image: string;
   isBestSeller?: boolean;
+  category?: string;
 }
 
 const ProductCard = ({ product }: { product: ProductProps }) => {
@@ -55,6 +55,13 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
       <div className="absolute top-4 left-4 bg-[#F2A83B] text-black text-xs font-bold px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
         ORGANIC
       </div>
+      
+      {/* Category Badge */}
+      {product.category && (
+        <div className="absolute top-4 right-16 bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+          {product.category === 'hair-care' ? 'HAIR CARE' : 'SKIN CARE'}
+        </div>
+      )}
       
       {/* Best Seller Badge */}
       {product.isBestSeller && (
