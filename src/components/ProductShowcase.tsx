@@ -1,69 +1,20 @@
-import { useEffect, useState } from 'react';
+
+import { useState } from 'react';
 import ProductCard, { ProductProps } from './ProductCard';
 import { Link } from 'react-router-dom';
 import { useProducts } from '@/hooks/useProducts';
 import { Skeleton } from '@/components/ui/skeleton';
-
-const fallbackProductData: { hairCare: ProductProps[], skinCare: ProductProps[] } = {
-  hairCare: [
-    {
-      id: 1,
-      name: "Hair Oil",
-      description: "Nourishing hair oil that strengthens hair follicles and promotes healthy growth.",
-      price: 199,
-      image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png",
-      isBestSeller: true
-    },
-    {
-      id: 2,
-      name: "Rosemary Spray",
-      description: "Refreshing rosemary spray that stimulates the scalp and adds shine to hair.",
-      price: 150,
-      image: "/lovable-uploads/8b6970d3-aa7a-4b17-b67b-3b06dd0b3383.png"
-    }
-  ],
-  skinCare: [
-    {
-      id: 3,
-      name: "Golden Serum (15ml)",
-      description: "Luxurious golden serum that brightens and evens skin tone, enhancing your natural glow.",
-      price: 250,
-      image: "/lovable-uploads/34914154-1774-4647-a973-b580b0ba3e64.png"
-    },
-    {
-      id: 4,
-      name: "Golden Serum (30ml)",
-      description: "Our premium gold-infused face serum for radiant, youthful skin in a larger size.",
-      price: 350,
-      image: "/lovable-uploads/34914154-1774-4647-a973-b580b0ba3e64.png"
-    },
-    {
-      id: 5,
-      name: "Strawberry Lip Balm",
-      description: "Hydrating lip balm with delicious strawberry flavor for soft, plump lips.",
-      price: 70,
-      image: "/lovable-uploads/75403ddb-c41d-4a13-a08c-ee678bdd4573.png"
-    },
-    {
-      id: 6,
-      name: "Golden Facewash",
-      description: "Gentle cleansing facewash that removes impurities while maintaining your skin's natural moisture.",
-      price: 150,
-      image: "/lovable-uploads/da5c0bf6-73f5-4067-9fd4-f0d64d8c0706.png"
-    }
-  ]
-};
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
 const ProductShowcase = () => {
   const [animateProducts] = useState(true);
-  const { products, loading, error } = useProducts();
+  const { products, loading, error, isUsingFallback } = useProducts();
   
+  // Organize products by category
   const organizedProducts = {
     hairCare: products.filter(p => p.category === 'hair-care' || p.id === 1 || p.id === 2),
     skinCare: products.filter(p => p.category === 'skin-care' || p.id >= 3)
   };
-  
-  const displayProducts = products.length > 0 ? organizedProducts : fallbackProductData;
 
   const renderSkeletons = (count: number) => {
     return Array(count).fill(0).map((_, index) => (
@@ -84,6 +35,10 @@ const ProductShowcase = () => {
     ));
   };
 
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   return (
     <section id="products" className="section-padding bg-gradient-to-b from-black/95 to-black">
       <div className="container mx-auto px-4">
@@ -97,10 +52,33 @@ const ProductShowcase = () => {
             Your skin and hair deserve nothing but the purest natural care.
           </p>
           
-          {error && (
-            <p className="text-red-400 mt-4 text-sm">
-              {error} <button className="underline" onClick={() => window.location.reload()}>Refresh page</button>
-            </p>
+          {isUsingFallback && (
+            <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-md inline-flex items-center gap-2">
+              <AlertCircle size={16} className="text-amber-500" />
+              <span className="text-amber-200 text-sm">
+                Using locally stored product data. Some features may be limited.
+              </span>
+              <button 
+                onClick={handleRefresh} 
+                className="ml-2 p-1 rounded-full hover:bg-white/10 transition-colors"
+                title="Refresh page"
+              >
+                <RefreshCw size={16} className="text-amber-500" />
+              </button>
+            </div>
+          )}
+          
+          {error && !isUsingFallback && (
+            <div className="text-red-400 mt-4 text-sm flex items-center justify-center gap-2">
+              <AlertCircle size={16} />
+              {error} 
+              <button 
+                onClick={handleRefresh} 
+                className="underline text-[#F2A83B] ml-1 flex items-center gap-1"
+              >
+                Refresh page <RefreshCw size={14} />
+              </button>
+            </div>
           )}
         </div>
         
@@ -110,7 +88,7 @@ const ProductShowcase = () => {
             {loading ? (
               renderSkeletons(2)
             ) : (
-              displayProducts.hairCare.map((product, index) => (
+              organizedProducts.hairCare.map((product, index) => (
                 <div 
                   key={product.id}
                   className={animateProducts ? 'animate-scale-in' : ''}
@@ -137,7 +115,7 @@ const ProductShowcase = () => {
             {loading ? (
               renderSkeletons(4)
             ) : (
-              displayProducts.skinCare.map((product, index) => (
+              organizedProducts.skinCare.map((product, index) => (
                 <div 
                   key={product.id}
                   className={animateProducts ? 'animate-scale-in' : ''}
