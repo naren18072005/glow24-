@@ -1,4 +1,3 @@
-
 /**
  * API Service for product and order operations
  */
@@ -7,16 +6,24 @@ import { ProductProps } from '@/components/ProductCard';
 
 // Use environment variables for API URL with fallback
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; 
+console.log("API base URL:", API_BASE_URL); // Log the API URL for debugging
 
 // Fetch all products
 export const fetchProducts = async (): Promise<ProductProps[]> => {
   try {
+    console.log(`Fetching products from: ${API_BASE_URL}/api/products`);
+    
     // Add a timeout to the fetch request to avoid long waiting times
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
     
     const response = await fetch(`${API_BASE_URL}/api/products`, {
-      signal: controller.signal
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+      }
     });
     
     clearTimeout(timeoutId);
@@ -24,7 +31,10 @@ export const fetchProducts = async (): Promise<ProductProps[]> => {
     if (!response.ok) {
       throw new Error(`Failed to fetch products: ${response.statusText}`);
     }
-    return await response.json();
+    
+    const data = await response.json();
+    console.log("Products fetched successfully:", data.length);
+    return data;
   } catch (error) {
     console.error("Error fetching products:", error);
     // Return empty array instead of throwing, to allow fallback data to be used

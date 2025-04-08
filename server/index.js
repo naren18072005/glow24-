@@ -14,9 +14,20 @@ const ordersRoutes = require('./routes/orders');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// More permissive CORS settings
+app.use(cors({
+  origin: '*',  // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
+
+// Simple logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  next();
+});
 
 // Routes
 app.use('/api/products', productsRoutes);
@@ -24,10 +35,16 @@ app.use('/api/orders', ordersRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to Glow24 Organics API' });
+  res.json({ message: 'Welcome to Glow24 Organics API', status: 'Server is running correctly' });
 });
 
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`API available at http://localhost:${PORT}`);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
 });
