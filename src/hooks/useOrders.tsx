@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -14,6 +13,7 @@ import {
   processPayment,
   showPaymentToast
 } from '@/utils/paymentProcessor';
+import { updateOrderStatus as updateOrderInDatabase } from '@/utils/orderDatabase';
 
 export const useOrders = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -36,10 +36,8 @@ export const useOrders = () => {
     setIsCreating(true);
 
     try {
-      // Generate a unique order ID
       const orderId = crypto.randomUUID();
       
-      // Prepare order data for API
       const orderData: OrderData = {
         customerName: orderDetails.customerName || 'Guest',
         customerEmail: orderDetails.customerEmail,
@@ -57,7 +55,6 @@ export const useOrders = () => {
         paymentMethod: orderDetails.paymentMethod
       };
       
-      // Store order information locally 
       storeOrderInfoLocally(
         orderId,
         {
@@ -72,13 +69,10 @@ export const useOrders = () => {
         orderDetails.grandTotal
       );
       
-      // Store payment method for later reference
       storePaymentMethod(orderDetails.paymentMethod);
       
-      // Show toast notification based on payment method
       showPaymentToast(toast, orderDetails.paymentMethod);
       
-      // Process payment 
       await processPayment(
         orderId,
         orderDetails.paymentMethod,
@@ -91,10 +85,8 @@ export const useOrders = () => {
         }
       );
       
-      // Submit the order to the API
       try {
         const response = await submitOrder(orderData);
-        // If API returns an orderId, use that, otherwise use the generated one
         if (response && response.orderId) {
           storeOrderInfoLocally(
             response.orderId,
@@ -116,7 +108,6 @@ export const useOrders = () => {
         console.error('API order submission failed, using locally generated orderId:', apiError);
       }
       
-      // If API call fails, we still continue with the locally generated orderId
       storeOrderConfirmation();
       return { id: orderId };
     } catch (error: any) {
@@ -149,7 +140,6 @@ export const useOrders = () => {
       return data;
     } catch (error) {
       console.error("Error tracking order:", error);
-      // Fallback to simulated tracking data if API fails
       const fallbackData = simulateTrackingData(orderId);
       setTrackingData(fallbackData);
       return fallbackData;
@@ -158,7 +148,23 @@ export const useOrders = () => {
     }
   };
 
-  // Helper function to simulate tracking data when API fails
+  const updateOrderStatus = async (orderId: string, status: string) => {
+    try {
+      const updated = await updateOrderInDatabase(orderId, status);
+      
+      if (updated) {
+        console.log(`Order ${orderId} status updated to ${status}`);
+        return true;
+      } else {
+        console.error(`Failed to update order ${orderId} status`);
+        return false;
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      return false;
+    }
+  };
+
   const simulateTrackingData = (orderId: string): TrackingData => {
     const now = new Date();
     const estimatedDelivery = new Date(now);
@@ -203,6 +209,7 @@ export const useOrders = () => {
   return {
     createOrder,
     getTrackingInfo,
+    updateOrderStatus,
     trackingData,
     isCreating,
     isTracking

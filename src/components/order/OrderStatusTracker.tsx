@@ -4,39 +4,46 @@ import { CheckCircle, Package, Truck, Clock, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Progress } from "@/components/ui/progress";
 import OrderTrackingMap from './OrderTrackingMap';
+import { TrackingData } from '@/services/apiService';
 
 interface OrderStatusTrackerProps {
   estimatedDeliveryDate: string;
   orderId?: string;
+  trackingData?: TrackingData | null;
 }
 
-const OrderStatusTracker = ({ estimatedDeliveryDate, orderId }: OrderStatusTrackerProps) => {
+const OrderStatusTracker = ({ estimatedDeliveryDate, orderId, trackingData }: OrderStatusTrackerProps) => {
   const [currentStage, setCurrentStage] = useState(1);
   const [progressValue, setProgressValue] = useState(25);
   const [showMap, setShowMap] = useState(false);
   
   // Simulated data - in a real app this would come from your backend
   const [deliveryData, setDeliveryData] = useState({
-    currentLocation: { lat: 11.0168, lng: 76.9558 }, // Coimbatore coordinates
-    distanceRemaining: '5.2 km',
+    currentLocation: trackingData?.currentLocation || { lat: 11.0168, lng: 76.9558 }, // Use tracking data or default
+    distanceRemaining: trackingData?.distance ? `${trackingData.distance} km` : '5.2 km',
     estimatedArrival: '30 minutes',
     driverName: 'Raj Kumar'
   });
   
   useEffect(() => {
-    // In a real app, this would be replaced with actual API calls or websocket connections
-    // to get real-time updates from your delivery tracking system
-    
-    // Simulate progress through the different stages
-    const timer = setTimeout(() => {
-      if (currentStage < 3) {
-        setCurrentStage(prev => prev + 1);
-        setProgressValue(prev => prev + 25);
+    // Update delivery data when tracking data changes
+    if (trackingData) {
+      setDeliveryData(prev => ({
+        ...prev,
+        currentLocation: trackingData.currentLocation || prev.currentLocation,
+        distanceRemaining: trackingData.distance ? `${trackingData.distance} km` : prev.distanceRemaining
+      }));
+      
+      // Set current stage based on tracking data stages
+      if (trackingData.stages) {
+        // Count completed stages
+        const completedStages = trackingData.stages.filter(stage => stage.completed).length;
+        setCurrentStage(completedStages > 0 ? completedStages : 1);
+        // Calculate progress value (25% per stage, max 100%)
+        setProgressValue(Math.min(completedStages * 25, 100));
       }
-    }, 5000);
-    
-    return () => clearTimeout(timer);
-  }, [currentStage]);
+    }
+  }, [trackingData]);
 
   return (
     <div className="mt-8">
