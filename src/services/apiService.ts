@@ -5,7 +5,8 @@
 
 import { ProductProps } from '@/components/ProductCard';
 
-const API_BASE_URL = "https://api.glow24organics.com"; // Replace with your actual API base URL
+// Use environment variables for API URL with fallback
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; 
 
 // Fetch all products
 export const fetchProducts = async (): Promise<ProductProps[]> => {
@@ -150,5 +151,30 @@ export const trackOrder = async (orderId: string): Promise<TrackingData> => {
       ],
       distance: 5.3
     };
+  }
+};
+
+// Update order status
+export const updateOrderStatus = async (orderId: string, status: string): Promise<void> => {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    
+    const response = await fetch(`${API_BASE_URL}/api/orders/${orderId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status }),
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to update order status: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error("Error updating order status:", error);
   }
 };
