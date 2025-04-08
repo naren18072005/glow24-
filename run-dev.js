@@ -9,6 +9,7 @@ if (!fs.existsSync(path.join(__dirname, 'server'))) {
   process.exit(1);
 }
 
+console.log('Starting backend server...');
 // Start backend server
 const serverProcess = spawn('npm', ['run', 'start'], {
   cwd: path.join(__dirname, 'server'),
@@ -16,6 +17,7 @@ const serverProcess = spawn('npm', ['run', 'start'], {
   shell: true
 });
 
+console.log('Starting frontend...');
 // Start frontend
 const frontendProcess = spawn('npm', ['run', 'dev'], {
   stdio: 'inherit',

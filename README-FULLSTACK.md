@@ -84,10 +84,9 @@ node run-dev.js
 - `GET /api/orders/:orderId/track` - Get tracking information for an order
 - `PUT /api/orders/:orderId/status` - Update order status
 
-## Notes for Development
+## Troubleshooting
 
-- The backend runs on port 5000 by default
-- The frontend development server runs on port 8080 by default
-- API requests from the frontend are proxied to the backend server
-- In development mode, the backend serves mock data
-- For production, you'll want to connect to a real database
+If you encounter issues with package installation:
+- Make sure you're using a compatible Node.js version (v14+ recommended)
+- If specific packages fail to build, try using npm instead of Bun for installation
+- Clear node_modules and package-lock.json before reinstalling dependencies
