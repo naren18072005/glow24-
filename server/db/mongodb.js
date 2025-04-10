@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
 const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB_NAME;
+const dbName = process.env.MONGODB_DB_NAME || 'glow24_organics';
 
 let client;
 let database;
@@ -24,7 +24,6 @@ async function connectToDatabase() {
     return database;
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    // Use fallback data in case of connection issues
     throw error;
   }
 }
