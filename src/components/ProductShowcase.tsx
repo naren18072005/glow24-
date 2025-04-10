@@ -4,11 +4,12 @@ import ProductCard, { ProductProps } from './ProductCard';
 import { Link } from 'react-router-dom';
 import { useProducts } from '@/hooks/useProducts';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
+import { Button } from './ui/button';
 
 const ProductShowcase = () => {
   const [animateProducts] = useState(true);
-  const { products, loading, error, isUsingFallback } = useProducts();
+  const { products, loading, error, isUsingFallback, retryFetch } = useProducts();
   
   // Organize products by category
   const organizedProducts = {
@@ -35,8 +36,12 @@ const ProductShowcase = () => {
     ));
   };
 
-  const handleRefresh = () => {
-    window.location.reload();
+  const handleRetry = () => {
+    if (retryFetch) {
+      retryFetch();
+    } else {
+      window.location.reload();
+    }
   };
 
   return (
@@ -53,18 +58,21 @@ const ProductShowcase = () => {
           </p>
           
           {isUsingFallback && (
-            <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-md inline-flex items-center gap-2">
-              <AlertCircle size={16} className="text-amber-500" />
-              <span className="text-amber-200 text-sm">
-                Using locally stored product data. Some features may be limited.
-              </span>
-              <button 
-                onClick={handleRefresh} 
-                className="ml-2 p-1 rounded-full hover:bg-white/10 transition-colors"
-                title="Refresh page"
+            <div className="mt-4 p-4 bg-amber-500/10 border border-amber-500/20 rounded-md flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xl mx-auto">
+              <div className="flex items-center gap-2">
+                <WifiOff size={18} className="text-amber-500" />
+                <span className="text-amber-200 text-sm sm:text-base font-medium">
+                  Using locally stored product data
+                </span>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleRetry} 
+                className="bg-amber-500/10 border-amber-500/30 text-amber-300 hover:text-amber-200 hover:bg-amber-500/20"
               >
-                <RefreshCw size={16} className="text-amber-500" />
-              </button>
+                <RefreshCw size={14} className="mr-1" /> Retry Connection
+              </Button>
             </div>
           )}
           
@@ -73,10 +81,10 @@ const ProductShowcase = () => {
               <AlertCircle size={16} />
               {error} 
               <button 
-                onClick={handleRefresh} 
+                onClick={handleRetry} 
                 className="underline text-[#F2A83B] ml-1 flex items-center gap-1"
               >
-                Refresh page <RefreshCw size={14} />
+                Refresh <RefreshCw size={14} />
               </button>
             </div>
           )}

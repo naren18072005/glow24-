@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchProducts } from '@/services/apiService';
 import { ProductProps } from '@/components/ProductCard';
 import { useToast } from '@/hooks/use-toast';
@@ -88,42 +88,52 @@ export const useProducts = (category?: string) => {
   const [isUsingFallback, setIsUsingFallback] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const getProducts = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const data = await fetchProducts();
-        
-        if (data.length === 0) {
-          // API returned no products, use fallback
-          setIsUsingFallback(true);
-          setProducts(getFilteredProducts(fallbackProductData, category));
-          setError('Could not load products. Using local data instead.');
-          toast({
-            title: "Network Error",
-            description: "Could not connect to product server. Showing local products.",
-            variant: "destructive",
-            duration: 5000,
-          });
-        } else {
-          // API returned products successfully
-          setIsUsingFallback(false);
-          setProducts(getFilteredProducts(data, category));
-        }
-      } catch (err) {
-        // This should not happen now since fetchProducts handles errors internally
+  const getProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const data = await fetchProducts();
+      
+      if (data.length === 0) {
+        // API returned no products, use fallback
         setIsUsingFallback(true);
         setProducts(getFilteredProducts(fallbackProductData, category));
-        setError('Failed to load products. Using local data instead.');
-      } finally {
-        setLoading(false);
+        setError('Could not load products from server. Using local data instead.');
+        toast({
+          title: "Network Issue",
+          description: "Could not connect to product server. Showing locally stored products.",
+          variant: "destructive",
+          duration: 5000,
+        });
+      } else {
+        // API returned products successfully
+        setIsUsingFallback(false);
+        setProducts(getFilteredProducts(data, category));
+        
+        if (isUsingFallback) {
+          // If we were previously using fallback data but now got real data
+          toast({
+            title: "Connection Restored",
+            description: "Successfully connected to product server.",
+            variant: "default",
+            duration: 3000,
+          });
+        }
       }
-    };
+    } catch (err) {
+      // This should not happen now since fetchProducts handles errors internally
+      setIsUsingFallback(true);
+      setProducts(getFilteredProducts(fallbackProductData, category));
+      setError('Failed to load products. Using local data instead.');
+    } finally {
+      setLoading(false);
+    }
+  }, [category, toast, isUsingFallback]);
 
+  useEffect(() => {
     getProducts();
-  }, [category, toast]);
+  }, [getProducts]);
 
   // Helper function to filter products by category
   const getFilteredProducts = (data: ProductProps[], filterCategory?: string): ProductProps[] => {
@@ -137,5 +147,11 @@ export const useProducts = (category?: string) => {
     );
   };
 
-  return { products, loading, error, isUsingFallback };
+  // Function to manually retry fetching products
+  const retryFetch = () => {
+    setLoading(true);
+    getProducts();
+  };
+
+  return { products, loading, error, isUsingFallback, retryFetch };
 };

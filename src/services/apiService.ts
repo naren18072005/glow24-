@@ -1,3 +1,4 @@
+
 /**
  * API Service for product and order operations
  */
@@ -8,8 +9,8 @@ import { ProductProps } from '@/components/ProductCard';
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; 
 console.log("API base URL:", API_BASE_URL); // Log the API URL for debugging
 
-// Fetch all products
-export const fetchProducts = async (): Promise<ProductProps[]> => {
+// Fetch all products with retry mechanism
+export const fetchProducts = async (retryCount = 2): Promise<ProductProps[]> => {
   try {
     console.log(`Fetching products from: ${API_BASE_URL}/api/products`);
     
@@ -37,7 +38,15 @@ export const fetchProducts = async (): Promise<ProductProps[]> => {
     return data;
   } catch (error) {
     console.error("Error fetching products:", error);
-    // Return empty array instead of throwing, to allow fallback data to be used
+    
+    // Retry logic - attempt to fetch again if retries remain
+    if (retryCount > 0) {
+      console.log(`Retrying fetch products. Attempts remaining: ${retryCount}`);
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
+      return fetchProducts(retryCount - 1);
+    }
+    
+    // Return empty array after all retries fail
     return [];
   }
 };

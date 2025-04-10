@@ -2,65 +2,43 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import ProductCard, { ProductProps } from '@/components/ProductCard';
-import { ArrowLeft } from 'lucide-react';
+import ProductCard from '@/components/ProductCard';
+import { ArrowLeft, RefreshCw, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-const skinCareProducts: ProductProps[] = [
-  {
-    id: 3,
-    name: "Golden Serum (15ml)",
-    description: "Luxurious golden serum that brightens and evens skin tone, enhancing your natural glow.",
-    price: 250,
-    image: "/lovable-uploads/34914154-1774-4647-a973-b580b0ba3e64.png"
-  },
-  {
-    id: 4,
-    name: "Golden Serum (30ml)",
-    description: "Our premium gold-infused face serum for radiant, youthful skin in a larger size.",
-    price: 350,
-    image: "/lovable-uploads/34914154-1774-4647-a973-b580b0ba3e64.png"
-  },
-  {
-    id: 5,
-    name: "Strawberry Lip Balm",
-    description: "Hydrating lip balm with delicious strawberry flavor for soft, plump lips.",
-    price: 70,
-    image: "/lovable-uploads/75403ddb-c41d-4a13-a08c-ee678bdd4573.png"
-  },
-  {
-    id: 6,
-    name: "Golden Facewash",
-    description: "Gentle cleansing facewash that removes impurities while maintaining your skin's natural moisture.",
-    price: 150,
-    image: "/lovable-uploads/da5c0bf6-73f5-4067-9fd4-f0d64d8c0706.png"
-  },
-  {
-    id: 7,
-    name: "Natural Soaps",
-    description: "Handcrafted organic soaps made with natural ingredients for a refreshing cleanse.",
-    price: 50,
-    image: "/lovable-uploads/9f5280ac-d499-4bdf-bba1-28e2f3a829d5.png"
-  },
-  {
-    id: 8,
-    name: "Aloe Vera Gel",
-    description: "Soothing aloe vera gel that calms irritated skin and provides deep hydration.",
-    price: 199,
-    image: "/lovable-uploads/fb77df66-ff33-4208-91fe-fab026973b83.png"
-  },
-  {
-    id: 9,
-    name: "Saffron Gel",
-    description: "Luxurious saffron-infused gel that brightens skin and reduces pigmentation.",
-    price: 150,
-    image: "/lovable-uploads/60b6dc7a-818d-4be6-a5d6-6d91245c129a.png"
-  }
-];
+import { useProducts } from '@/hooks/useProducts';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const SkinCare = () => {
   const navigate = useNavigate();
   const [animateProducts] = useState(true);
+  const { products, loading, error, isUsingFallback, retryFetch } = useProducts('skin-care');
+
+  const renderSkeletons = (count: number) => {
+    return Array(count).fill(0).map((_, index) => (
+      <div key={`skeleton-${index}`} className="animate-pulse">
+        <div className="h-[400px] bg-white/5 rounded-xl overflow-hidden">
+          <div className="w-full h-3/5 bg-white/10"></div>
+          <div className="p-6">
+            <div className="h-6 bg-white/10 rounded w-3/4 mb-4"></div>
+            <div className="h-4 bg-white/10 rounded w-full mb-2"></div>
+            <div className="h-4 bg-white/10 rounded w-4/5 mb-4"></div>
+            <div className="flex justify-between items-center mt-6">
+              <div className="h-6 bg-white/10 rounded w-1/4"></div>
+              <div className="h-10 bg-white/10 rounded w-1/3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+  };
+
+  const handleRetry = () => {
+    if (retryFetch) {
+      retryFetch();
+    } else {
+      window.location.reload();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
@@ -85,18 +63,38 @@ const SkinCare = () => {
               Discover our carefully formulated skin care products made with the finest organic ingredients.
               Your skin deserves nothing but the purest natural care.
             </p>
+            
+            {isUsingFallback && (
+              <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-md inline-flex items-center gap-2">
+                <AlertCircle size={16} className="text-amber-500" />
+                <span className="text-amber-200 text-sm">
+                  Using locally stored product data. Some features may be limited.
+                </span>
+                <button 
+                  onClick={handleRetry} 
+                  className="ml-2 p-1 rounded-full hover:bg-white/10 transition-colors"
+                  title="Refresh page"
+                >
+                  <RefreshCw size={16} className="text-amber-500" />
+                </button>
+              </div>
+            )}
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {skinCareProducts.map((product, index) => (
-              <div 
-                key={product.id}
-                className={animateProducts ? 'animate-scale-in' : ''}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
+            {loading ? (
+              renderSkeletons(6)
+            ) : (
+              products.map((product, index) => (
+                <div 
+                  key={product.id}
+                  className={animateProducts ? 'animate-scale-in' : ''}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </main>

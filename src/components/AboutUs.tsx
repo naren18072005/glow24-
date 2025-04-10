@@ -50,7 +50,7 @@ const AboutUs = () => {
             
             <div className="pt-4">
               <a 
-                href="#contact" 
+                href="#founder-story" 
                 className="bg-gradient-to-r from-[#F2A83B] to-[#F2A83B]/80 hover:from-[#F2A83B]/90 hover:to-[#F2A83B]/70 text-black font-medium py-3 px-6 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-[#F2A83B]/20 inline-flex items-center hover-scale"
               >
                 Discover Our Story
@@ -99,6 +99,60 @@ const AboutUs = () => {
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F2A83B] transition-colors duration-300">Ayurvedic Wisdom</h3>
               <p className="text-white/70">
                 Our formulations blend ancient Ayurvedic knowledge with modern science for holistic beauty solutions.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Founder's Story Section */}
+        <div id="founder-story" className="mt-20">
+          <div className="text-center mb-8 animate-fade-in">
+            <h5 className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium tracking-wider text-white/90">
+              OUR JOURNEY
+            </h5>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">The Founder's Story</h2>
+          </div>
+          
+          <div className="glass-card p-8 rounded-xl border border-[#F2A83B]/20 max-w-4xl mx-auto">
+            <div className="prose prose-invert prose-lg">
+              <p className="text-white/90 mb-4">
+                But Glow 24 didn't come from a big brand or fancy lab.
+                It started in a home kitchen — not a boardroom — crafted by a college student who was juggling tech lectures by day and mixing hair & skin formulas by night.
+              </p>
+              
+              <p className="text-white/90 mb-4">
+                Battling my own skin and hair concerns, I got tired of artificial products that never delivered. So, I turned to nature and tradition — creating simple, powerful remedies that actually worked. What began as a personal solution quickly turned into a bigger purpose.
+              </p>
+              
+              <p className="text-white/90 mb-4">
+                That's how Glow 24 came to life — a blend of ancient wisdom, homemade care, and a spark of innovation.
+              </p>
+              
+              <h3 className="text-2xl font-bold text-[#F2A83B] mt-6 mb-4">💫 What We Stand For</h3>
+              
+              <ul className="space-y-2 text-white/90">
+                <li className="flex items-start">
+                  <span className="text-[#F2A83B] mr-2">🌿</span> <span><strong>100% Natural & Handmade</strong> – No chemicals. No shortcuts. Just real results.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-[#F2A83B] mr-2">⚡</span> <span><strong>Tradition + Thoughtful Research</strong> – Rooted in age-old remedies, refined with care.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-[#F2A83B] mr-2">🏡</span> <span><strong>Homemade with Heart</strong> – Crafted in a home kitchen, not mass-produced.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-[#F2A83B] mr-2">❤️</span> <span><strong>Honest Beauty for Real People</strong> – Because everyone deserves to glow, naturally.</span>
+                </li>
+              </ul>
+              
+              <p className="text-white/90 mt-6">
+                Glow 24 isn't just skincare.<br/>
+                It's a daily ritual. A form of self-love. A return to what truly matters.
+              </p>
+              
+              <p className="text-[#F2A83B] font-medium text-lg mt-6">
+                Welcome to Glow 24.<br/>
+                Your glow. Your way. Always. 🌸
               </p>
             </div>
           </div>
