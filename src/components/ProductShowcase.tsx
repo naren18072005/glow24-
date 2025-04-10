@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import ProductCard, { ProductProps } from './ProductCard';
 import { Link } from 'react-router-dom';
@@ -6,6 +5,7 @@ import { useProducts } from '@/hooks/useProducts';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import { Button } from './ui/button';
+import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 
 const ProductShowcase = () => {
   const [animateProducts] = useState(true);
@@ -58,34 +58,29 @@ const ProductShowcase = () => {
           </p>
           
           {isUsingFallback && (
-            <div className="mt-4 p-4 bg-amber-500/10 border border-amber-500/20 rounded-md flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xl mx-auto">
-              <div className="flex items-center gap-2">
-                <WifiOff size={18} className="text-amber-500" />
-                <span className="text-amber-200 text-sm sm:text-base font-medium">
-                  Using locally stored product data
-                </span>
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleRetry} 
-                className="bg-amber-500/10 border-amber-500/30 text-amber-300 hover:text-amber-200 hover:bg-amber-500/20"
-              >
-                <RefreshCw size={14} className="mr-1" /> Retry Connection
-              </Button>
+            <div className="mt-6 max-w-xl mx-auto">
+              <Alert variant="destructive" className="bg-amber-500/10 border-amber-500/30 text-amber-200">
+                <WifiOff className="h-4 w-4 text-amber-500" />
+                <AlertTitle className="text-amber-300">Network Connection Issue</AlertTitle>
+                <AlertDescription className="text-amber-200">
+                  <p className="mb-2">We're currently showing locally stored product data due to connection issues.</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleRetry} 
+                    className="bg-amber-500/10 border-amber-500/30 text-amber-300 hover:text-amber-200 hover:bg-amber-500/20 mt-1"
+                  >
+                    <RefreshCw size={14} className="mr-1" /> Retry Connection
+                  </Button>
+                </AlertDescription>
+              </Alert>
             </div>
           )}
           
-          {error && !isUsingFallback && (
-            <div className="text-red-400 mt-4 text-sm flex items-center justify-center gap-2">
-              <AlertCircle size={16} />
-              {error} 
-              <button 
-                onClick={handleRetry} 
-                className="underline text-[#F2A83B] ml-1 flex items-center gap-1"
-              >
-                Refresh <RefreshCw size={14} />
-              </button>
+          {!isUsingFallback && !loading && (
+            <div className="mt-4 flex items-center justify-center gap-2 text-green-400">
+              <Wifi size={16} />
+              <span className="text-sm">Connected to product server</span>
             </div>
           )}
         </div>
