@@ -35,7 +35,13 @@ app.use('/api/orders', ordersRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to Glow24 Organics API', status: 'Server is running correctly' });
+  res.json({ 
+    message: 'Welcome to Glow24 Organics API', 
+    status: 'Server is running correctly',
+    env: {
+      mongodb: process.env.MONGODB_URI ? 'Configured' : 'Not configured'
+    }
+  });
 });
 
 // Start the server

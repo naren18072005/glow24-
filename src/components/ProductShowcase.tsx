@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import ProductCard, { ProductProps } from './ProductCard';
 import { Link } from 'react-router-dom';
@@ -83,6 +84,15 @@ const ProductShowcase = () => {
               <span className="text-sm">Connected to product server</span>
             </div>
           )}
+          
+          <div className="mt-4">
+            <Link 
+              to="/products-table"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-[#F2A83B]/10 text-[#F2A83B] hover:bg-[#F2A83B]/20 transition-colors"
+            >
+              View Complete Product Database
+            </Link>
+          </div>
         </div>
         
         <div className="mb-16">

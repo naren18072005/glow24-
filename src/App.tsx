@@ -16,6 +16,7 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import Cart from "./components/Cart";
 import HairCare from "./pages/HairCare";
 import SkinCare from "./pages/SkinCare";
+import ProductsTable from "./pages/ProductsTable";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
 
@@ -40,6 +41,7 @@ const App = () => (
               <Route path="/payment/callback" element={<PaymentCallback />} />
               <Route path="/payment/redirect" element={<PaymentRedirect />} />
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
+              <Route path="/products-table" element={<ProductsTable />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/account" element={<Account />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
