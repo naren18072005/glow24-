@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: '*',  // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
 }));
 
 app.use(express.json());
@@ -29,9 +29,29 @@ app.use((req, res, next) => {
   next();
 });
 
+// API Key validation middleware for secure routes
+const validateApiKey = (req, res, next) => {
+  const apiKey = req.headers['x-api-key'];
+  
+  // Skip API key validation for development
+  if (process.env.NODE_ENV === 'development') {
+    return next();
+  }
+  
+  // Check if API key is provided and matches
+  if (!apiKey || apiKey !== process.env.PRIVATE_API_KEY) {
+    return res.status(401).json({ 
+      error: 'Unauthorized', 
+      message: 'Invalid or missing API key'
+    });
+  }
+  
+  next();
+};
+
 // Routes
 app.use('/api/products', productsRoutes);
-app.use('/api/orders', ordersRoutes);
+app.use('/api/orders', validateApiKey, ordersRoutes); // Apply API key validation to orders
 
 // Root route
 app.get('/', (req, res) => {
@@ -39,7 +59,8 @@ app.get('/', (req, res) => {
     message: 'Welcome to Glow24 Organics API', 
     status: 'Server is running correctly',
     env: {
-      mongodb: process.env.MONGODB_URI ? 'Configured' : 'Not configured'
+      mongodb: process.env.MONGODB_URI ? 'Configured' : 'Not configured',
+      apiKey: process.env.PRIVATE_API_KEY ? 'Configured' : 'Not configured'
     }
   });
 });

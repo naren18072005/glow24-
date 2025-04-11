@@ -9,6 +9,17 @@ import { ProductProps } from '@/components/ProductCard';
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; 
 console.log("API base URL:", API_BASE_URL); // Log the API URL for debugging
 
+// API Key for secure endpoints
+const API_KEY = "193930cd-d040-4a41-82d7-0b8ffe4a98b4";
+
+// Common headers for API requests
+const getHeaders = () => ({
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  'Cache-Control': 'no-cache',
+  'x-api-key': API_KEY
+});
+
 // Fetch all products with retry mechanism
 export const fetchProducts = async (retryCount = 2): Promise<ProductProps[]> => {
   try {
@@ -20,11 +31,7 @@ export const fetchProducts = async (retryCount = 2): Promise<ProductProps[]> => 
     
     const response = await fetch(`${API_BASE_URL}/api/products`, {
       signal: controller.signal,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache'
-      }
+      headers: getHeaders()
     });
     
     clearTimeout(timeoutId);
@@ -76,9 +83,7 @@ export const submitOrder = async (orderData: OrderData): Promise<{ orderId: stri
     
     const response = await fetch(`${API_BASE_URL}/api/orders`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getHeaders(),
       body: JSON.stringify(orderData),
       signal: controller.signal
     });
@@ -119,6 +124,7 @@ export const trackOrder = async (orderId: string): Promise<TrackingData> => {
     const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
     
     const response = await fetch(`${API_BASE_URL}/api/orders/${orderId}/track`, {
+      headers: getHeaders(),
       signal: controller.signal
     });
     
@@ -181,9 +187,7 @@ export const updateOrderStatus = async (orderId: string, status: string): Promis
     
     const response = await fetch(`${API_BASE_URL}/api/orders/${orderId}/status`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getHeaders(),
       body: JSON.stringify({ status }),
       signal: controller.signal
     });
