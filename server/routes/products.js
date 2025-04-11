@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const { connectToDatabase } = require('../db/mongodb');
@@ -92,7 +91,7 @@ const fallbackProducts = [
 // GET all products
 router.get('/', async (req, res) => {
   try {
-    console.log('Attempting to connect to MongoDB Atlas...');
+    console.log('Attempting to connect to MongoDB...');
     // Try to connect to MongoDB and fetch products
     const db = await connectToDatabase();
     console.log('Successfully connected to database');
@@ -102,17 +101,14 @@ router.get('/', async (req, res) => {
     
     const products = await collection.find({}).toArray();
     
-    console.log(`Fetched ${products.length} products from MongoDB Atlas`);
+    console.log(`Fetched ${products.length} products from MongoDB`);
     
     if (products.length === 0) {
       console.log('No products found in database. Using fallback data');
       return res.json(fallbackProducts);
     }
     
-    // Adding artificial delay to simulate network latency
-    setTimeout(() => {
-      res.json(products);
-    }, 300);
+    res.json(products);
   } catch (error) {
     console.error('Error fetching products from MongoDB:', error.message);
     

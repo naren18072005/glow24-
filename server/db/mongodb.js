@@ -12,9 +12,9 @@ async function connectToDatabase() {
   if (database) return database;
   
   try {
-    console.log('Attempting to connect to MongoDB Atlas...');
+    console.log('Attempting to connect to MongoDB...');
     console.log(`Database name: ${dbName}`);
-    console.log(`Connection string starts with: ${uri.substring(0, 20)}...`);
+    console.log(`Connection string: ${uri}`);
     
     client = new MongoClient(uri, {
       useNewUrlParser: true,
@@ -22,7 +22,7 @@ async function connectToDatabase() {
     });
     
     await client.connect();
-    console.log('Connected successfully to MongoDB Atlas');
+    console.log('Connected successfully to MongoDB');
     
     database = client.db(dbName);
     return database;
