@@ -95,7 +95,11 @@ router.get('/', async (req, res) => {
     console.log('Attempting to connect to MongoDB Atlas...');
     // Try to connect to MongoDB and fetch products
     const db = await connectToDatabase();
+    console.log('Successfully connected to database');
+    
     const collection = db.collection('products');
+    console.log('Accessing products collection');
+    
     const products = await collection.find({}).toArray();
     
     console.log(`Fetched ${products.length} products from MongoDB Atlas`);
@@ -110,7 +114,7 @@ router.get('/', async (req, res) => {
       res.json(products);
     }, 300);
   } catch (error) {
-    console.error('Error fetching products from MongoDB:', error);
+    console.error('Error fetching products from MongoDB:', error.message);
     
     // Return fallback data in case of error
     console.log('Using fallback product data');

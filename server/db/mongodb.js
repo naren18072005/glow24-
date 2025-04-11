@@ -12,6 +12,10 @@ async function connectToDatabase() {
   if (database) return database;
   
   try {
+    console.log('Attempting to connect to MongoDB Atlas...');
+    console.log(`Database name: ${dbName}`);
+    console.log(`Connection string starts with: ${uri.substring(0, 20)}...`);
+    
     client = new MongoClient(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -23,7 +27,8 @@ async function connectToDatabase() {
     database = client.db(dbName);
     return database;
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('MongoDB connection error:', error.message);
+    console.error('Full error stack:', error.stack);
     throw error;
   }
 }
