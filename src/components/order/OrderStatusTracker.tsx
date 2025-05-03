@@ -4,7 +4,7 @@ import { CheckCircle, Package, Truck, Clock, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Progress } from "@/components/ui/progress";
 import OrderTrackingMap from './OrderTrackingMap';
-import { TrackingData } from '@/services/apiService';
+import { TrackingData } from '@/services/api/trackingService';
 
 interface OrderStatusTrackerProps {
   estimatedDeliveryDate: string;
