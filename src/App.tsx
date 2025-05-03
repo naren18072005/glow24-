@@ -15,7 +15,6 @@ import PaymentRedirect from "./pages/PaymentRedirect";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Cart from "./components/Cart";
 import HairCare from "./pages/HairCare";
-import SkinCare from "./pages/SkinCare";
 import ProductsTable from "./pages/ProductsTable";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
@@ -35,7 +34,6 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/hair-care" element={<HairCare />} />
-              <Route path="/skin-care" element={<SkinCare />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/payment" element={<Payment />} />
               <Route path="/payment/callback" element={<PaymentCallback />} />
