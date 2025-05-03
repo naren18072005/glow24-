@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { fetchProducts } from '@/services/apiService';
+import { fetchProducts } from '@/services/api';
 import { ProductProps } from '@/components/ProductCard';
 import { useToast } from '@/hooks/use-toast';
 

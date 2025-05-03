@@ -1,9 +1,10 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/hooks/useCart';
-import { submitOrder, OrderData, trackOrder, TrackingData } from '@/services/apiService';
+import { submitOrder, OrderData, trackOrder, TrackingData } from '@/services/api';
 import { 
   storeOrderInfoLocally,
   storePaymentMethod,
