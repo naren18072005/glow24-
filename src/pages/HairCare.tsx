@@ -5,28 +5,12 @@ import Footer from '@/components/Footer';
 import ProductCard, { ProductProps } from '@/components/ProductCard';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-const hairCareProducts: ProductProps[] = [
-  {
-    id: 1,
-    name: "Hair Oil",
-    description: "Nourishing hair oil that strengthens hair follicles and promotes healthy growth.",
-    price: 199,
-    image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png",
-    isBestSeller: true
-  },
-  {
-    id: 2,
-    name: "Rosemary Spray",
-    description: "Refreshing rosemary spray that stimulates the scalp and adds shine to hair.",
-    price: 150,
-    image: "/lovable-uploads/8b6970d3-aa7a-4b17-b67b-3b06dd0b3383.png"
-  }
-];
+import { useProducts } from '@/hooks/useProducts';
 
 const HairCare = () => {
   const navigate = useNavigate();
   const [animateProducts] = useState(true);
+  const { products, loading } = useProducts('hair-care');
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
@@ -54,15 +38,35 @@ const HairCare = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {hairCareProducts.map((product, index) => (
-              <div 
-                key={product.id}
-                className={animateProducts ? 'animate-scale-in' : ''}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
+            {loading ? (
+              // Display skeleton loaders while loading
+              Array(4).fill(0).map((_, index) => (
+                <div key={`skeleton-${index}`} className="animate-pulse">
+                  <div className="h-[400px] bg-white/5 rounded-xl overflow-hidden">
+                    <div className="w-full h-3/5 bg-white/10"></div>
+                    <div className="p-6">
+                      <div className="h-6 bg-white/10 rounded w-3/4 mb-4"></div>
+                      <div className="h-4 bg-white/10 rounded w-full mb-2"></div>
+                      <div className="h-4 bg-white/10 rounded w-4/5 mb-4"></div>
+                      <div className="flex justify-between items-center mt-6">
+                        <div className="h-6 bg-white/10 rounded w-1/4"></div>
+                        <div className="h-10 bg-white/10 rounded w-1/3"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              products.map((product, index) => (
+                <div 
+                  key={product.id}
+                  className={animateProducts ? 'animate-scale-in' : ''}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </main>

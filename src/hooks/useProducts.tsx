@@ -20,6 +20,22 @@ const localProductData: ProductProps[] = [
     price: 150,
     image: "/lovable-uploads/8b6970d3-aa7a-4b17-b67b-3b06dd0b3383.png",
     category: 'hair-care'
+  },
+  {
+    id: 3,
+    name: "Hair Oil (100ml)",
+    description: "Concentrated hair oil formula in a convenient 100ml size. Perfect for nourishing and strengthening hair follicles.",
+    price: 150,
+    image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png",
+    category: 'hair-care'
+  },
+  {
+    id: 4,
+    name: "Hair Oil (200ml)",
+    description: "Premium hair oil in a larger 200ml bottle. Our signature formula for stronger, healthier hair with more value.",
+    price: 250,
+    image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png",
+    category: 'hair-care'
   }
 ];
 
