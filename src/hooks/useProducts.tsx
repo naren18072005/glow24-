@@ -1,26 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { ProductProps } from '@/components/ProductCard';
 
 // Local product data
 const localProductData: ProductProps[] = [
-  {
-    id: 1,
-    name: "Hair Oil",
-    description: "Nourishing hair oil that strengthens hair follicles and promotes healthy growth.",
-    price: 199,
-    image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png",
-    isBestSeller: true,
-    category: 'hair-care'
-  },
-  {
-    id: 2,
-    name: "Rosemary Spray",
-    description: "Refreshing rosemary spray that stimulates the scalp and adds shine to hair.",
-    price: 150,
-    image: "/lovable-uploads/8b6970d3-aa7a-4b17-b67b-3b06dd0b3383.png",
-    category: 'hair-care'
-  },
   {
     id: 3,
     name: "Hair Oil (100ml)",
@@ -35,6 +17,14 @@ const localProductData: ProductProps[] = [
     description: "Premium hair oil in a larger 200ml bottle. Our signature formula for stronger, healthier hair with more value.",
     price: 250,
     image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png",
+    category: 'hair-care'
+  },
+  {
+    id: 2,
+    name: "Rosemary Spray",
+    description: "Refreshing rosemary spray that stimulates the scalp and adds shine to hair.",
+    price: 150,
+    image: "/lovable-uploads/8b6970d3-aa7a-4b17-b67b-3b06dd0b3383.png",
     category: 'hair-care'
   }
 ];
