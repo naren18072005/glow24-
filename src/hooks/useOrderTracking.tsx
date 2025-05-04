@@ -1,8 +1,19 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { TrackingData } from '@/services/api/trackingService';
 import { simulateTrackingData } from '@/utils/orderTrackingUtils';
+
+export interface TrackingData {
+  orderId: string;
+  status: string;
+  estimatedDelivery: string;
+  currentLocation: string;
+  events: {
+    date: string;
+    status: string;
+    location: string;
+  }[];
+}
 
 export const useOrderTracking = () => {
   const [isTracking, setIsTracking] = useState(false);
@@ -22,15 +33,13 @@ export const useOrderTracking = () => {
     setIsTracking(true);
     
     try {
-      // Instead of calling an API, directly simulate the data
-      const fallbackData = simulateTrackingData(orderId);
-      setTrackingData(fallbackData);
-      return fallbackData;
+      // Simulate tracking data
+      const data = simulateTrackingData(orderId);
+      setTrackingData(data);
+      return data;
     } catch (error) {
       console.error("Error tracking order:", error);
-      const fallbackData = simulateTrackingData(orderId);
-      setTrackingData(fallbackData);
-      return fallbackData;
+      return null;
     } finally {
       setIsTracking(false);
     }

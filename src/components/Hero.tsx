@@ -98,7 +98,7 @@ const Hero = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            <span className="gold-shimmer">Premium Organic</span> Hair & Skin Care
+            <span className="gold-shimmer">Premium Organic</span> Hair Care
           </motion.h1>
           
           <motion.p 
@@ -119,9 +119,6 @@ const Hero = () => {
           >
             <Link to="/hair-care" className="button-primary px-8 py-4 hover-scale">
               Shop Hair Care
-            </Link>
-            <Link to="/skin-care" className="border border-[#F2A83B] text-[#F2A83B] px-8 py-4 rounded-md font-semibold hover:bg-[#F2A83B]/10 transition-colors duration-300 hover-scale">
-              Shop Skin Care
             </Link>
           </motion.div>
           
