@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { trackOrder, TrackingData } from '@/services/api';
+import { TrackingData } from '@/services/api/trackingService';
 import { simulateTrackingData } from '@/utils/orderTrackingUtils';
 
 export const useOrderTracking = () => {
@@ -22,9 +22,10 @@ export const useOrderTracking = () => {
     setIsTracking(true);
     
     try {
-      const data = await trackOrder(orderId);
-      setTrackingData(data);
-      return data;
+      // Instead of calling an API, directly simulate the data
+      const fallbackData = simulateTrackingData(orderId);
+      setTrackingData(fallbackData);
+      return fallbackData;
     } catch (error) {
       console.error("Error tracking order:", error);
       const fallbackData = simulateTrackingData(orderId);

@@ -71,12 +71,6 @@ const Header = () => {
             >
               Hair Care
             </Link>
-            <Link
-              to="/skin-care"
-              className="nav-link text-white/70 hover:text-white transition-colors"
-            >
-              Skin Care
-            </Link>
           </nav>
 
           <div className="flex items-center space-x-4">
@@ -140,13 +134,6 @@ const Header = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Hair Care
-            </Link>
-            <Link
-              to="/skin-care"
-              className="text-white hover:text-[#F2A83B] transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Skin Care
             </Link>
             
             {user ? (
