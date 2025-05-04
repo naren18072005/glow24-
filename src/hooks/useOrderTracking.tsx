@@ -4,15 +4,18 @@ import { useToast } from '@/hooks/use-toast';
 import { simulateTrackingData } from '@/utils/orderTrackingUtils';
 
 export interface TrackingData {
-  orderId: string;
   status: string;
+  currentLocation: {
+    lat: number;
+    lng: number;
+  };
   estimatedDelivery: string;
-  currentLocation: string;
-  events: {
-    date: string;
-    status: string;
-    location: string;
+  stages: {
+    name: string;
+    completed: boolean;
+    timestamp?: string;
   }[];
+  distance?: number;
 }
 
 export const useOrderTracking = () => {

@@ -1,5 +1,5 @@
 
-import { TrackingData } from '@/services/api/trackingService';
+import { TrackingData } from '@/hooks/useOrderTracking';
 
 /**
  * Generates simulated tracking data for orders when API fails

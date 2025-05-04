@@ -26,28 +26,62 @@ const localProductData: ProductProps[] = [
 export const useProducts = (category?: string) => {
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [isUsingFallback, setIsUsingFallback] = useState(false);
 
   useEffect(() => {
     const loadProducts = () => {
       setLoading(true);
+      setError(null);
       
-      // Filter products by category if specified
-      const filteredProducts = category 
-        ? localProductData.filter(product => product.category === category)
-        : localProductData;
-        
-      // Simulate loading delay
-      setTimeout(() => {
-        setProducts(filteredProducts);
+      try {
+        // Filter products by category if specified
+        const filteredProducts = category 
+          ? localProductData.filter(product => product.category === category)
+          : localProductData;
+          
+        // Simulate loading delay
+        setTimeout(() => {
+          setProducts(filteredProducts);
+          setLoading(false);
+          setIsUsingFallback(false);
+        }, 500);
+      } catch (err) {
+        console.error("Error loading products:", err);
+        setError(err instanceof Error ? err : new Error("Unknown error loading products"));
+        setIsUsingFallback(true);
+        setProducts(category 
+          ? localProductData.filter(product => product.category === category)
+          : localProductData);
         setLoading(false);
-      }, 500);
+      }
     };
     
     loadProducts();
   }, [category]);
 
+  const retryFetch = () => {
+    setLoading(true);
+    setError(null);
+    
+    // Simulate network request retry
+    setTimeout(() => {
+      // Filter products by category if specified
+      const filteredProducts = category 
+        ? localProductData.filter(product => product.category === category)
+        : localProductData;
+        
+      setProducts(filteredProducts);
+      setLoading(false);
+      setIsUsingFallback(false);
+    }, 500);
+  };
+
   return {
     products,
-    loading
+    loading,
+    error,
+    isUsingFallback,
+    retryFetch
   };
 };
