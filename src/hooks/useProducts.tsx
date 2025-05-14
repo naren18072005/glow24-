@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { ProductProps } from '@/components/ProductCard';
 
@@ -10,7 +9,8 @@ const localProductData: ProductProps[] = [
     description: "Concentrated hair oil formula in a convenient 100ml size. Perfect for nourishing and strengthening hair follicles.",
     price: 150,
     image: "/lovable-uploads/666e7309-d5d2-456a-ba0a-2bd5e0db41f6.png",
-    category: 'hair-care'
+    category: 'hair-care',
+    isBestSeller: true
   },
   {
     id: 4,
