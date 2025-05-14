@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { ProductProps } from '@/components/ProductCard';
 
@@ -26,6 +27,15 @@ const localProductData: ProductProps[] = [
     price: 150,
     image: "/lovable-uploads/8b6970d3-aa7a-4b17-b67b-3b06dd0b3383.png",
     category: 'hair-care'
+  },
+  {
+    id: 5,
+    name: "Strawberry Lip Balm",
+    description: "Hydrating strawberry lip balm that moisturizes and nourishes dry lips with natural ingredients.",
+    price: 70,
+    image: "/lovable-uploads/d88e1db7-feda-4585-9e8b-041a50bf6268.png",
+    isBestSeller: true,
+    category: 'lip-care'
   }
 ];
 

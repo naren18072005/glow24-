@@ -7,7 +7,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const ProductShowcase = () => {
   const [animateProducts] = useState(true);
-  const { products, loading } = useProducts('hair-care');
+  const { products: hairProducts, loading: loadingHair } = useProducts('hair-care');
+  const { products: lipProducts, loading: loadingLip } = useProducts('lip-care');
   
   const renderSkeletons = (count: number) => {
     return Array(count).fill(0).map((_, index) => (
@@ -35,10 +36,10 @@ const ProductShowcase = () => {
           <h5 className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium tracking-wider text-white/90">
             OUR COLLECTIONS
           </h5>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Premium Organic Hair Care Products</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Premium Organic Products</h2>
           <p className="text-white/80 max-w-2xl mx-auto">
-            Discover our carefully formulated hair care products made with the finest organic ingredients. 
-            Your hair deserves nothing but the purest natural care.
+            Discover our carefully formulated products made with the finest organic ingredients. 
+            Your body deserves nothing but the purest natural care.
           </p>
           
           <div className="mt-4">
@@ -51,13 +52,13 @@ const ProductShowcase = () => {
           </div>
         </div>
         
-        <div>
+        <div className="mb-16">
           <h3 className="text-2xl font-bold text-white mb-6 text-center">Hair Care Products</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {loading ? (
+            {loadingHair ? (
               renderSkeletons(2)
             ) : (
-              products.map((product, index) => (
+              hairProducts.map((product, index) => (
                 <div 
                   key={product.id}
                   className={animateProducts ? 'animate-scale-in' : ''}
@@ -74,6 +75,33 @@ const ProductShowcase = () => {
               className="text-[#F2A83B] hover:underline inline-flex items-center"
             >
               View All Hair Care Products
+            </Link>
+          </div>
+        </div>
+        
+        <div>
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">Lip Care Products</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {loadingLip ? (
+              renderSkeletons(1)
+            ) : (
+              lipProducts.map((product, index) => (
+                <div 
+                  key={product.id}
+                  className={animateProducts ? 'animate-scale-in' : ''}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
+          </div>
+          <div className="text-center mt-6">
+            <Link 
+              to="/lip-care"
+              className="text-[#F2A83B] hover:underline inline-flex items-center"
+            >
+              View All Lip Care Products
             </Link>
           </div>
         </div>
