@@ -41,7 +41,7 @@ const Checkout = () => {
   };
   
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-surface">
       <div className="container mx-auto px-4 py-10">
         <CheckoutHeader />
         
@@ -63,13 +63,13 @@ const Checkout = () => {
               <button
                 type="submit"
                 disabled={isCreating}
-                className="w-full py-3 bg-[#F2A83B] text-black rounded-md font-medium hover:bg-[#F2A83B]/90 transition-colors disabled:opacity-70"
+                className="w-full btn-primary py-4 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isCreating 
-                  ? 'Processing...' 
+                  ? 'Processing Order...' 
                   : formValues.paymentMethod === 'cod' 
-                    ? 'Place Order' 
-                    : 'Continue to Payment'}
+                    ? '🚀 Place Order - Cash on Delivery' 
+                    : '💳 Continue to Google Pay'}
               </button>
             </form>
           </div>

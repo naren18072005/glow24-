@@ -46,22 +46,41 @@ const PaymentRedirect = () => {
   }, [navigate, toast, clearCart, paymentMethod]);
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="bg-white/5 rounded-lg p-8 border border-white/10 max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold text-white mb-6">
-          {paymentMethod === 'gpay' && 'Processing Google Pay Payment'}
-          {paymentMethod === 'cod' && 'Confirming Blue Dart Delivery'}
-        </h1>
-        
-        <div className="flex flex-col items-center justify-center py-8">
-          <LoaderCircle size={48} 
-            className={`animate-spin mb-4 ${paymentMethod === 'gpay' ? 'text-green-500' : 'text-blue-500'}`} 
-          />
-          <p className="text-white/80">
-            {paymentMethod === 'gpay' && 'Processing your Google Pay transaction...'}
-            {paymentMethod === 'cod' && 'Confirming your Blue Dart delivery details...'}
+    <div className="min-h-screen bg-surface flex items-center justify-center">
+      <div className="glass-card-premium rounded-xl p-8 max-w-lg w-full text-center mx-4">
+        <div className="mb-6">
+          <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 ${
+            paymentMethod === 'gpay' 
+              ? 'bg-green-500/20 border border-green-500/30' 
+              : 'bg-blue-500/20 border border-blue-500/30'
+          }`}>
+            <LoaderCircle size={32} 
+              className={`animate-spin ${paymentMethod === 'gpay' ? 'text-green-500' : 'text-blue-500'}`} 
+            />
+          </div>
+          
+          <h1 className="text-2xl font-bold text-text-primary mb-2">
+            {paymentMethod === 'gpay' && '💳 Processing Google Pay Payment'}
+            {paymentMethod === 'cod' && '📦 Confirming Blue Dart Delivery'}
+          </h1>
+          
+          <p className="text-text-secondary">
+            {paymentMethod === 'gpay' && 'Your secure payment is being processed...'}
+            {paymentMethod === 'cod' && 'Setting up your cash on delivery order...'}
           </p>
-          <p className="text-white/60 text-sm mt-2">Please do not close this window</p>
+        </div>
+        
+        <div className="space-y-3">
+          <div className="flex items-center justify-center space-x-2 text-sm text-text-muted">
+            <div className={`w-2 h-2 rounded-full animate-pulse ${
+              paymentMethod === 'gpay' ? 'bg-green-500' : 'bg-blue-500'
+            }`}></div>
+            <span>Secure processing</span>
+          </div>
+          
+          <p className="text-xs text-text-muted">
+            Please do not close this window or press the back button
+          </p>
         </div>
       </div>
     </div>

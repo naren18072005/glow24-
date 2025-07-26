@@ -102,15 +102,14 @@ const Header = () => {
 
             <button
               onClick={openCart}
-              className="flex items-center text-white/70 hover:text-white transition-colors relative group"
+              className="relative group flex items-center justify-center w-10 h-10 rounded-full bg-surface-elevated/50 backdrop-blur-sm border border-white/10 hover:border-gold/30 transition-all duration-300 hover:bg-surface-elevated/80"
             >
-              <ShoppingCart size={20} className="transition-all duration-300 group-hover:text-[#F2A83B]" />
+              <ShoppingCart size={18} className="text-text-secondary group-hover:text-gold transition-colors duration-300" />
               {itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#F2A83B] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-gold to-gold-light text-surface text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg animate-pulse">
                   {itemCount}
                 </span>
               )}
-              {!isMobile && <span className="ml-2">Cart</span>}
             </button>
 
             <button

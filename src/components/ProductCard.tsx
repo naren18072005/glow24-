@@ -27,16 +27,12 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
   const handleBuyNow = (e: React.MouseEvent) => {
     e.preventDefault();
     addToCart(product);
-    toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart`,
-      duration: 3000,
-    });
+    // Remove toast popup for cleaner UX
   };
   
   return (
     <div 
-      className="group relative h-[400px] glass-card rounded-xl overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-[#F2A83B]/10"
+      className="group relative h-[400px] glass-card-premium rounded-xl overflow-hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -84,11 +80,11 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
           <span className="text-lg font-bold text-[#F2A83B]">₹{product.price.toFixed(2)}</span>
           
           <button 
-            className="bg-[#F2A83B] hover:bg-[#F2A83B]/90 text-black flex items-center gap-1 py-2 px-4 rounded-md transition-all duration-300 hover:shadow-lg hover:shadow-[#F2A83B]/20"
+            className="btn-primary flex items-center gap-2 py-2 px-4 rounded-lg"
             onClick={handleBuyNow}
           >
             <ShoppingCart size={16} />
-            <span>Buy Now</span>
+            <span>Add to Cart</span>
           </button>
         </div>
       </div>

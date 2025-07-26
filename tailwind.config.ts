@@ -53,6 +53,23 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Premium design tokens
+				gold: {
+					DEFAULT: 'hsl(var(--gold))',
+					light: 'hsl(var(--gold-light))',
+					dark: 'hsl(var(--gold-dark))'
+				},
+				surface: {
+					DEFAULT: 'hsl(var(--surface))',
+					elevated: 'hsl(var(--surface-elevated))',
+					glass: 'hsl(var(--surface-glass))'
+				},
+				text: {
+					primary: 'hsl(var(--text-primary))',
+					secondary: 'hsl(var(--text-secondary))',
+					muted: 'hsl(var(--text-muted))'
+				},
+				// Legacy colors for backward compatibility
 				brand: {
 					DEFAULT: '#ea384c',
 					light: '#FF5A6E',
@@ -66,11 +83,6 @@ export default {
 				success: {
 					DEFAULT: '#4CAF50',
 					light: '#81C784'
-				},
-				gold: {
-					DEFAULT: '#F2A83B',
-					light: '#F5BE68',
-					dark: '#D99020'
 				}
 			},
 			fontFamily: {

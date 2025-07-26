@@ -21,38 +21,48 @@ const PaymentMethodSelector = ({ paymentMethod, handleInputChange }: PaymentMeth
   };
 
   return (
-    <div className="glass-card rounded-lg p-6 border border-white/10 transition-all duration-300 hover:border-white/20">
-      <h2 className="text-xl font-semibold text-white mb-4">Payment Method</h2>
+    <div className="glass-card-premium rounded-xl p-6">
+      <h2 className="text-xl font-semibold text-text-primary mb-6">Payment Method</h2>
       
       <RadioGroup value={paymentMethod} onValueChange={handleRadioChange} className="space-y-4">
-        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/10 transition-all duration-300 border border-green-500/30 bg-green-500/5">
-          <RadioGroupItem value="gpay" id="gpay" className="text-green-500" />
-          <div className="flex items-center">
-            <Wallet size={20} className="text-green-500 mr-2" />
-            <div>
-              <Label htmlFor="gpay" className="text-white cursor-pointer">Google Pay (GPay)</Label>
-              <p className="text-xs text-white/60 mt-1">Fast and secure payment directly to your Google Pay account</p>
+        <div className="flex items-center space-x-4 cursor-pointer p-4 rounded-xl glass-card-premium transition-all duration-300 hover:border-green-500/50 border-green-500/30 bg-green-500/5">
+          <RadioGroupItem value="gpay" id="gpay" className="text-green-500 border-green-500" />
+          <div className="flex items-center flex-1">
+            <Wallet size={22} className="text-green-500 mr-3" />
+            <div className="flex-1">
+              <Label htmlFor="gpay" className="text-text-primary cursor-pointer font-semibold">Google Pay</Label>
+              <p className="text-sm text-text-secondary mt-1">Instant payment with UPI - Most popular choice</p>
             </div>
           </div>
-          <div className="ml-auto">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1024px-Google_Pay_Logo_%282020%29.svg.png" alt="Google Pay" className="h-8" />
+          <div className="flex items-center">
+            <div className="bg-green-500/10 px-2 py-1 rounded-full text-xs text-green-400 font-semibold mr-3">
+              INSTANT
+            </div>
+            <img 
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1024px-Google_Pay_Logo_%282020%29.svg.png" 
+              alt="Google Pay" 
+              className="h-8 opacity-80" 
+            />
           </div>
         </div>
         
-        <div className="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-white/10 transition-all duration-300 border border-blue-500/30 bg-blue-500/5">
-          <RadioGroupItem value="cod" id="cod" className="text-blue-500" />
-          <div className="flex items-center">
-            <Truck size={20} className="text-blue-500 mr-2" />
-            <div>
-              <Label htmlFor="cod" className="text-white cursor-pointer">Cash on Delivery (via Blue Dart)</Label>
-              <p className="text-xs text-white/60 mt-1">Pay when you receive your order via Blue Dart courier service</p>
+        <div className="flex items-center space-x-4 cursor-pointer p-4 rounded-xl glass-card-premium transition-all duration-300 hover:border-blue-500/50 border-blue-500/30 bg-blue-500/5">
+          <RadioGroupItem value="cod" id="cod" className="text-blue-500 border-blue-500" />
+          <div className="flex items-center flex-1">
+            <Truck size={22} className="text-blue-500 mr-3" />
+            <div className="flex-1">
+              <Label htmlFor="cod" className="text-text-primary cursor-pointer font-semibold">Cash on Delivery</Label>
+              <p className="text-sm text-text-secondary mt-1">Pay when your order arrives via Blue Dart Express</p>
             </div>
           </div>
-          <div className="ml-auto">
+          <div className="flex items-center">
+            <div className="bg-blue-500/10 px-2 py-1 rounded-full text-xs text-blue-400 font-semibold mr-3">
+              SECURE
+            </div>
             <img 
               src="https://logowik.com/content/uploads/images/blue-dart-express4889.logowik.com.webp" 
               alt="Blue Dart" 
-              className="h-7 object-contain" 
+              className="h-7 object-contain opacity-80" 
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Blue_Dart_logo.svg/2560px-Blue_Dart_logo.svg.png";

@@ -19,32 +19,32 @@ interface ShippingFormProps {
 
 const ShippingDetailsForm = ({ formValues, handleInputChange, isCoimbatore, totalAmount }: ShippingFormProps) => {
   return (
-    <div className="bg-white/5 rounded-lg p-6 border border-white/10">
-      <h2 className="text-xl font-semibold text-white mb-4">Shipping Details</h2>
+    <div className="glass-card-premium rounded-xl p-6">
+      <h2 className="text-xl font-semibold text-text-primary mb-6">Shipping Details</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="name" className="block text-white/70 mb-2 text-sm">Full Name</label>
+          <label htmlFor="name" className="block text-text-secondary mb-2 text-sm font-medium">Full Name</label>
           <input
             type="text"
             id="name"
             name="name"
             value={formValues.name}
             onChange={handleInputChange}
-            className="w-full bg-black border border-white/20 rounded-md px-4 py-2 text-white focus:outline-none focus:border-[#F2A83B]"
+            className="input-field"
             required
           />
         </div>
         
         <div>
-          <label htmlFor="email" className="block text-white/70 mb-2 text-sm">Email</label>
+          <label htmlFor="email" className="block text-text-secondary mb-2 text-sm font-medium">Email</label>
           <input
             type="email"
             id="email"
             name="email"
             value={formValues.email}
             onChange={handleInputChange}
-            className="w-full bg-black border border-white/20 rounded-md px-4 py-2 text-white focus:outline-none focus:border-[#F2A83B]"
+            className="input-field"
             required
           />
         </div>
