@@ -121,7 +121,7 @@
   }
   
   .glass-card-premium {
-    @apply glass-card hover:shadow-glow hover:border-gold/30;
+    @apply glass-card hover:shadow-xl hover:border-gold/30;
     transition: var(--transition-smooth);
   }
   
@@ -137,7 +137,7 @@
   /* Enhanced Interactive Elements */
   .hover-scale {
     transition: var(--transition-bouncy);
-    @apply hover:scale-105 hover:shadow-glow;
+    @apply hover:scale-105 hover:shadow-xl;
   }
   
   .nav-link {
