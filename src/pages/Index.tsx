@@ -6,23 +6,19 @@ import ProductShowcase from '@/components/ProductShowcase';
 import AboutUs from '@/components/AboutUs';
 import ContactForm from '@/components/ContactForm';
 import Footer from '@/components/Footer';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
-    // Set body background to black on mount
-    document.body.classList.add('bg-black');
-    
     // Simulate loading for smooth entrance animation
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 800);
+    }, 1000);
     
     return () => {
-      // Cleanup
-      document.body.classList.remove('bg-black');
       clearTimeout(timer);
     };
   }, []);
@@ -53,7 +49,7 @@ const Index = () => {
         </motion.div>
       ) : (
         <motion.div 
-          className="min-h-screen flex flex-col bg-black/90"
+          className="min-h-screen flex flex-col"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
@@ -97,20 +93,32 @@ const Index = () => {
             />
           </div>
           
-          <Header />
+          <ErrorBoundary>
+            <Header />
+          </ErrorBoundary>
           <main className="flex-grow relative z-10">
-            <Hero />
+            <ErrorBoundary>
+              <Hero />
+            </ErrorBoundary>
             <div className="section-with-bg-overlay">
-              <ProductShowcase />
+              <ErrorBoundary>
+                <ProductShowcase />
+              </ErrorBoundary>
             </div>
             <div className="section-with-bg-overlay">
-              <AboutUs />
+              <ErrorBoundary>
+                <AboutUs />
+              </ErrorBoundary>
             </div>
             <div className="section-with-bg-overlay">
-              <ContactForm />
+              <ErrorBoundary>
+                <ContactForm />
+              </ErrorBoundary>
             </div>
           </main>
-          <Footer />
+          <ErrorBoundary>
+            <Footer />
+          </ErrorBoundary>
         </motion.div>
       )}
     </AnimatePresence>
